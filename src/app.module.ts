@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { UsersModule } from '@users/users.module';
+import { UserModule } from '@user/user.module';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { ConfigModule } from '@nestjs/config';
 import { SequelizeConfigService } from '@config/sequelizeConfig.service';
@@ -15,7 +15,7 @@ import { AuthModule } from '@auth/auth.module';
     ConfigModule.forRoot({
       load: [databaseConfig],
     }),
-    UsersModule,
+    UserModule,
     AuthModule,
   ],
   controllers: [],

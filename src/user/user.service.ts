@@ -1,26 +1,24 @@
-import { Injectable } from '@nestjs/common';
-import { UsersModel } from './users.model';
+import { ConflictException, Injectable } from '@nestjs/common';
+import { UserModel } from './user.model';
 import { InjectModel } from '@nestjs/sequelize';
 import { CreateUserDTO } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
-export class UsersService {
+export class UserService {
   constructor(
-    @InjectModel(UsersModel)
-    private usersModel: typeof UsersModel,
+    @InjectModel(UserModel)
+    private usersModel: typeof UserModel,
   ) {}
 
   findOne(filter: {
     where: { id?: number; username?: string; email?: string };
-  }): Promise<UsersModel> {
+  }): Promise<UserModel> {
     return this.usersModel.findOne({ ...filter });
   }
 
-  async create(
-    createUserDTO: CreateUserDTO,
-  ): Promise<UsersModel | { warningMessage: string }> {
-    const user = new UsersModel();
+  async create(createUserDTO: CreateUserDTO) {
+    const user = new UserModel();
 
     const existingUserByEmail = await this.findOne({
       where: { email: createUserDTO.email },
@@ -30,11 +28,11 @@ export class UsersService {
     });
 
     if (existingUserByEmail) {
-      return { warningMessage: 'Email already exists' };
+      return new ConflictException('Email already exists');
     }
 
     if (existingUserByUsername) {
-      return { warningMessage: 'Username already exists' };
+      return new ConflictException('Username already exists');
     }
 
     const hashedPassword = await bcrypt.hash(createUserDTO.password, 10);
