@@ -1,13 +1,13 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { UsersService } from '@users/users.service';
+import { UserService } from '@user/user.service';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly userService: UserService) {}
 
   async validateUser(email: string, password: string) {
-    const user = await this.usersService.findOne({
+    const user = await this.userService.findOne({
       where: { email },
     });
 

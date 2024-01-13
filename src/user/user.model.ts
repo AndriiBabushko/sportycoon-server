@@ -1,8 +1,8 @@
 import { Column, Model, Table } from 'sequelize-typescript';
-import { UsersService } from './users.service';
+import { UserService } from './user.service';
 
 @Table
-export class UsersModel extends Model<UsersService> {
+export class UserModel extends Model<UserService> {
   @Column
   username: string;
 
