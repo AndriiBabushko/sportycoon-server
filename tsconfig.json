@@ -9,7 +9,13 @@
     "target": "ES2021",
     "sourceMap": true,
     "outDir": "./dist",
-    "baseUrl": "./",
+    "baseUrl": "./src",
+    "paths": {
+      "@src/types/*": ["types/*"],
+      "@users/*": ["users/*"],
+      "@auth/*": ["auth/*"],
+      "@config/*": ["config/*"]
+    },
     "incremental": true,
     "skipLibCheck": true,
     "strictNullChecks": false,
