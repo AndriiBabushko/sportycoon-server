@@ -22,11 +22,7 @@ export class AuthService {
     }
 
     if (user && isPasswordValid) {
-      return {
-        userId: user.id,
-        username: user.username,
-        email: user.email,
-      };
+      return user;
     }
 
     return null;
