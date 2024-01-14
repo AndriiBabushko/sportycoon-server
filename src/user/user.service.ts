@@ -28,11 +28,11 @@ export class UserService {
     });
 
     if (existingUserByEmail) {
-      return new ConflictException('Email already exists');
+      throw new ConflictException('Email already exists');
     }
 
     if (existingUserByUsername) {
-      return new ConflictException('Username already exists');
+      throw new ConflictException('Username already exists');
     }
 
     const hashedPassword = await bcrypt.hash(createUserDTO.password, 10);
@@ -42,6 +42,11 @@ export class UserService {
     });
     user.password = hashedPassword;
 
-    return user.save();
+    await user.save();
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, ...result } = user['dataValues'] as any;
+
+    return result;
   }
 }
