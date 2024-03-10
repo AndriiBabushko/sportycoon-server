@@ -4,7 +4,11 @@ import {
   SequelizeModuleOptions,
   SequelizeOptionsFactory,
 } from '@nestjs/sequelize';
-import { UserModel } from '@user/user.model';
+import { UserModel } from '@entities/user/user.model';
+import { GoalModel } from '@entities/goal/goal.model';
+import { RoleModel } from '@entities/role/role.model';
+import { UserGoalsModel } from '@entities/goal/user-goals.model';
+import { UserRolesModel } from '@entities/role/user-roles.model';
 
 @Injectable()
 export class SequelizeConfigService implements SequelizeOptionsFactory {
@@ -23,13 +27,13 @@ export class SequelizeConfigService implements SequelizeOptionsFactory {
       username,
       password,
       database,
-      models: [UserModel],
+      models: [UserModel, RoleModel, UserRolesModel, GoalModel, UserGoalsModel],
       autoLoadModels: true,
       synchronize: true,
       define: {
         charset: 'utf8',
         collate: 'utf8_general_ci',
       },
-    };
+    } as SequelizeModuleOptions;
   }
 }

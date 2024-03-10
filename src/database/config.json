@@ -1,0 +1,16 @@
+{
+  "development": {
+    "username": "root",
+    "password": "rootroot",
+    "database": "sportycoon_dev",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "root",
+    "password": "rootroot",
+    "database": "sportycoon",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  }
+}
