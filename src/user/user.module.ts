@@ -1,13 +1,25 @@
 import { Module } from '@nestjs/common';
-import { UserController } from './user.controller';
 import { UserService } from './user.service';
-import { SequelizeModule } from '@nestjs/sequelize';
-import { UserModel } from './user.model';
+import { GraphQLModule } from '@nestjs/graphql';
+import {
+  ApolloFederationDriver,
+  ApolloFederationDriverConfig,
+} from '@nestjs/apollo';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
+import { PrismaService } from '@prisma/prisma.service';
+import { UserResolver } from '@user/user.resolver';
 
 @Module({
-  imports: [SequelizeModule.forFeature([UserModel])],
-  controllers: [UserController],
-  providers: [UserService],
+  imports: [
+    GraphQLModule.forRoot<ApolloFederationDriverConfig>({
+      driver: ApolloFederationDriver,
+      autoSchemaFile: {
+        federation: 2,
+      },
+    }),
+  ],
+  providers: [UserService, PrismaService],
   exports: [UserService],
 })
 export class UserModule {}

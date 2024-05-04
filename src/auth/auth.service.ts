@@ -1,32 +1,27 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { PrismaService } from '@prisma/prisma.service';
 import { UserService } from '@user/user.service';
-import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly userService: UserService,
+  ) {}
 
   async validateUser(email: string, password: string) {
-    const user = await this.userService.findOne({
-      where: { email },
+    const user = await this.prismaService.user.findUnique({
+      where: {
+        email,
+      },
     });
 
-    if (!user) {
-      throw new UnauthorizedException('Invalid email');
-    }
-
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-
-    if (!isPasswordValid) {
-      throw new UnauthorizedException('Invalid password');
-    }
-
-    if (user && isPasswordValid) {
-      return {
-        userId: user.id,
-        username: user.username,
-        email: user.email,
-      };
+    if (
+      user &&
+      (await this.userService.comparePassword(password, user.password))
+    ) {
+      const { password: _password, ...result } = user;
+      return result;
     }
 
     return null;

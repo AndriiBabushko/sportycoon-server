@@ -1,47 +1,63 @@
-import { ConflictException, Injectable } from '@nestjs/common';
-import { UserModel } from './user.model';
-import { InjectModel } from '@nestjs/sequelize';
-import { CreateUserDTO } from './dto/create-user.dto';
+import { ConflictException, HttpStatus, Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
+import { ConfigService } from '@nestjs/config';
+import { LoginUserDTO, RegisterUserDTO } from '@user/dto/user.dto';
+import { PrismaService } from '@prisma/prisma.service';
 
 @Injectable()
 export class UserService {
-  constructor(
-    @InjectModel(UserModel)
-    private usersModel: typeof UserModel,
-  ) {}
+  constructor(private readonly prisma: PrismaService) {}
 
-  findOne(filter: {
-    where: { id?: number; username?: string; email?: string };
-  }): Promise<UserModel> {
-    return this.usersModel.findOne({ ...filter });
+  async comparePassword(password: string, hashedPassword: string) {
+    return await bcrypt.compare(password, hashedPassword);
   }
 
-  async create(createUserDTO: CreateUserDTO) {
-    const user = new UserModel();
+  async register(registerDTO: RegisterUserDTO) {
+    const { email, username, password, full_name } = registerDTO;
 
-    const existingUserByEmail = await this.findOne({
-      where: { email: createUserDTO.email },
-    });
-    const existingUserByUsername = await this.findOne({
-      where: { username: createUserDTO.username },
+    const isEmailExist = await this.prisma.user.findUnique({
+      where: {
+        email,
+      },
     });
 
-    if (existingUserByEmail) {
-      return new ConflictException('Email already exists');
+    if (isEmailExist) {
+      throw new ConflictException('User already exist with this email!');
     }
 
-    if (existingUserByUsername) {
-      return new ConflictException('Username already exists');
+    const isUsernameExist = await this.prisma.user.findFirst({
+      where: {
+        username,
+      },
+    });
+
+    if (isUsernameExist) {
+      throw new ConflictException('User already exist with this username!');
     }
 
-    const hashedPassword = await bcrypt.hash(createUserDTO.password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-    Object.keys(createUserDTO).forEach((key) => {
-      user[key] = createUserDTO[key];
+    const newUser = await this.prisma.user.create({
+      data: {
+        email,
+        password: hashedPassword,
+        username,
+      },
     });
-    user.password = hashedPassword;
 
-    return user.save();
+    return {
+      code: HttpStatus.CREATED,
+      user: newUser,
+      message: 'User created successfully!',
+    };
   }
+
+  // async login(loginUserDTO: LoginUserDTO) {
+  //   const { email, password } = loginUserDTO;
+  //   return {
+  //     access_token: '',
+  //   };
+  // }
+
+  // async getAuthUser(user: UserModel) {}
 }

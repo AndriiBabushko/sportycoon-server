@@ -9,12 +9,13 @@
     "target": "ES2021",
     "sourceMap": true,
     "outDir": "./dist",
-    "baseUrl": "./src",
+    "baseUrl": ".",
     "paths": {
-      "@src/types/*": ["types/*"],
-      "@user/*": ["user/*"],
-      "@auth/*": ["auth/*"],
-      "@config/*": ["config/*"]
+      "@prisma/*": ["prisma/*"],
+      "@src/types/*": ["src/types/*"],
+      "@user/*": ["src/user/*"],
+      "@auth/*": ["src/auth/*"],
+      "@config/*": ["src/config/*"]
     },
     "incremental": true,
     "skipLibCheck": true,
