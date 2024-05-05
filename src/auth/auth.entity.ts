@@ -23,6 +23,7 @@ export class Avatar {
 }
 
 @ObjectType()
+@Directive('@key(fields: "id")')
 export class User {
   @Field()
   id: string;
@@ -32,9 +33,6 @@ export class User {
 
   @Field()
   email: string;
-
-  @Field()
-  full_name: string;
 
   @Field(() => Avatar, { nullable: true })
   avatar?: Avatar | null;

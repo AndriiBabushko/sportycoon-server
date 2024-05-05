@@ -1,8 +1,7 @@
 import { ConflictException, HttpStatus, Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { ConfigService } from '@nestjs/config';
-import { LoginUserDTO, RegisterUserDTO } from '@user/dto/user.dto';
 import { PrismaService } from '@prisma/prisma.service';
+import { RegisterUserInput } from '@auth/input/register-user.input';
 
 @Injectable()
 export class UserService {
@@ -12,8 +11,12 @@ export class UserService {
     return await bcrypt.compare(password, hashedPassword);
   }
 
-  async register(registerDTO: RegisterUserDTO) {
-    const { email, username, password, full_name } = registerDTO;
+  async hashPassword(password: string) {
+    return await bcrypt.hash(password, 10);
+  }
+
+  async register(registerUserInput: RegisterUserInput) {
+    const { email, username, password } = registerUserInput;
 
     const isEmailExist = await this.prisma.user.findUnique({
       where: {
@@ -51,13 +54,4 @@ export class UserService {
       message: 'User created successfully!',
     };
   }
-
-  // async login(loginUserDTO: LoginUserDTO) {
-  //   const { email, password } = loginUserDTO;
-  //   return {
-  //     access_token: '',
-  //   };
-  // }
-
-  // async getAuthUser(user: UserModel) {}
 }
