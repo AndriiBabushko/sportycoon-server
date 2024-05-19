@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -20,23 +14,30 @@ enum Role {
   user
 }
 
+enum Strategy {
+  local
+  google
+}
+
 model Avatar {
-  id        String @id @default(uuid()) @db.Uuid
-  public_id String
-  url       String
-  user      User   @relation(fields: [user_id], references: [id])
-  user_id   String @unique @db.Uuid
+  id         String @id @default(uuid()) @db.Uuid
+  public_id  String
+  url        String
+  user       User   @relation(fields: [user_id], references: [id])
+  user_id    String @unique @db.Uuid
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 }
 
 model User {
-  id        String  @id @default(uuid()) @db.Uuid
-  email     String  @unique
-  username  String  @unique
-  password  String
-  role      Role    @default(user)
-  avatar    Avatar?
+  id         String  @id @default(uuid()) @db.Uuid
+  email      String? @unique
+  username   String? @unique
+  password   String?
+  role       Role    @default(user)
+  avatar     Avatar?
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
+  google_id  String? @unique
+  spotify_id String? @unique
 }

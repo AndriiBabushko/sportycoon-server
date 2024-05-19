@@ -28,11 +28,11 @@ export class User {
   @Field()
   id: string;
 
-  @Field()
-  username: string;
+  @Field(() => String, { nullable: true })
+  username?: string | null;
 
   @Field()
-  email: string;
+  email?: string | null;
 
   @Field(() => Avatar, { nullable: true })
   avatar?: Avatar | null;
@@ -45,4 +45,10 @@ export class User {
 
   @Field()
   updated_at: Date;
+
+  @Field()
+  google_id?: string | null;
+
+  @Field()
+  spotify_id?: string | null;
 }
