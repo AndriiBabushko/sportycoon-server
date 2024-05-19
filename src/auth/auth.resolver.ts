@@ -17,7 +17,7 @@ export class AuthResolver {
     return 'Hello World!';
   }
 
-  @Mutation(() => LoginResponse)
+  @Mutation(() => LoginResponse, { name: 'login' })
   async login(@Args('loginUserInput') loginUserInput: LoginUserInput) {
     return await this.authService.login(loginUserInput);
   }

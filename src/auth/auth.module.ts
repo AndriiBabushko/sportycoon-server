@@ -8,8 +8,12 @@ import * as process from 'node:process';
 import { JwtStrategy } from '@auth/strategies/jwt.strategy';
 import { PrismaService } from '@prisma/prisma.service';
 import { AuthResolver } from '@auth/auth.resolver';
+import { GoogleStrategy } from '@auth/strategies/google.strategy';
+import { AuthController } from '@auth/auth.controller';
+import { SpotifyStrategy } from '@auth/strategies/spotify.strategy';
 
 @Module({
+  controllers: [AuthController],
   imports: [
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
@@ -25,6 +29,8 @@ import { AuthResolver } from '@auth/auth.resolver';
     AuthService,
     LocalStrategy,
     JwtStrategy,
+    GoogleStrategy,
+    SpotifyStrategy,
     PrismaService,
   ],
 })

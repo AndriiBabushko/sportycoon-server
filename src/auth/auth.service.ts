@@ -9,6 +9,7 @@ import { UserService } from '@user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { RegisterUserInput } from '@auth/input/register-user.input';
 import { LoginUserInput } from '@auth/input/login-user.input';
+import { User } from '@auth/auth.entity';
 
 @Injectable()
 export class AuthService {
@@ -35,21 +36,10 @@ export class AuthService {
       throw new ForbiddenException('Invalid credentials');
     }
 
+    const tokens = await this.generateTokens(user);
+
     return {
-      access_token: this.jwtService.sign(
-        {
-          email: user.email,
-          sub: user.id,
-        },
-        { secret: process.env.JWT_SECRET, expiresIn: '1d' },
-      ),
-      refresh_token: this.jwtService.sign(
-        {
-          email: user.email,
-          sub: user.id,
-        },
-        { secret: process.env.JWT_SECRET, expiresIn: '7d' },
-      ),
+      ...tokens,
       user,
     };
   }
@@ -125,5 +115,20 @@ export class AuthService {
     }
 
     return user;
+  }
+
+  async generateTokens(user: User) {
+    const payload = { username: user.username, sub: user.email };
+
+    const accessToken = this.jwtService.sign(payload, {
+      secret: process.env.JWT_SECRET,
+      expiresIn: '1d',
+    });
+    const refreshToken = this.jwtService.sign(payload, {
+      secret: process.env.JWT_SECRET,
+      expiresIn: '7d',
+    });
+
+    return { access_token: accessToken, refresh_token: refreshToken };
   }
 }

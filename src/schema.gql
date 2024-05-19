@@ -53,8 +53,9 @@ type User {
   avatar: Avatar
   created_at: DateTime!
   email: String!
+  google_id: String!
   id: String!
   role: String!
   updated_at: DateTime!
-  username: String!
+  username: String
 }
