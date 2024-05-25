@@ -15,30 +15,115 @@ enum Role {
   user
 }
 
-enum Strategy {
-  local
-  google
+enum Gender {
+  male
+  female
+  other
+}
+
+enum FitnessLevel {
+  newbie
+  beginner
+  intermediate
+  advanced
+}
+
+enum Goal {
+  build_strength
+  lose_weight
+  build_muscle
+  improve_health
+  learn_techniques
+}
+
+enum HeightUnit {
+  cm
+  in
+}
+
+enum WeightUnit {
+  kg
+  lbs
 }
 
 model Avatar {
-  id         String @id @default(uuid()) @db.Uuid
+  id         String   @id @default(uuid()) @db.Uuid
   public_id  String
   url        String
-  user       User   @relation(fields: [user_id], references: [id])
-  user_id    String @unique @db.Uuid
+  user       User     @relation(fields: [user_id], references: [id])
+  user_id    String   @unique @db.Uuid
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 }
 
+model Performance {
+  id         String @id @default(uuid()) @db.Uuid
+  public_id  String
+  maxPullUps Int
+  maxPushUps Int
+  maxSquats  Int
+  maxDips    Int
+  user       User   @relation(fields: [user_id], references: [id])
+  user_id    String @unique @db.Uuid
+}
+
 model User {
-  id         String  @id @default(uuid()) @db.Uuid
-  email      String? @unique
-  username   String? @unique
-  password   String?
-  role       Role    @default(user)
-  avatar     Avatar?
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-  google_id  String? @unique
-  spotify_id String? @unique
+  id                String        @id @default(uuid()) @db.Uuid
+  email             String?       @unique
+  username          String?       @unique
+  gender            Gender?
+  height_value      Float?
+  height_unit       HeightUnit?
+  weight_value      Float?
+  weight_unit       WeightUnit?
+  goal_weight_value Float?
+  goal_weight_unit  WeightUnit?
+  fitness_level     FitnessLevel?
+  goals             Goal[]
+  performance       Performance?
+  password          String?
+  role              Role          @default(user)
+  avatar            Avatar?
+  shopCart          ShopCart?
+  wishlist          ShopItem[]
+  created_at        DateTime      @default(now())
+  updated_at        DateTime      @updatedAt
+  google_id         String?       @unique
+  spotify_id        String?       @unique
+}
+
+model ShopCart {
+  id         String     @id @default(uuid()) @db.Uuid
+  user       User       @relation(fields: [user_id], references: [id])
+  user_id    String     @unique @db.Uuid
+  items      ShopItem[]
+  created_at DateTime   @default(now())
+  updated_at DateTime   @updatedAt
+}
+
+model ShopCategory {
+  id          String     @id @default(uuid()) @db.Uuid
+  name        String
+  description String
+  items       ShopItem[]
+  created_at  DateTime   @default(now())
+  updated_at  DateTime   @updatedAt
+}
+
+model ShopItem {
+  id              String       @id @default(uuid()) @db.Uuid
+  name            String
+  description     String
+  price           Float
+  preview         String
+  images          String[]
+  bundle_discount Float?
+  category        ShopCategory @relation(fields: [category_id], references: [id])
+  cart            ShopCart     @relation(fields: [cart_id], references: [id])
+  category_id     String       @unique @db.Uuid
+  cart_id         String       @unique @db.Uuid
+  created_at      DateTime     @default(now())
+  updated_at      DateTime     @updatedAt
+  user            User?        @relation(fields: [user_id], references: [id])
+  user_id          String?      @db.Uuid
 }

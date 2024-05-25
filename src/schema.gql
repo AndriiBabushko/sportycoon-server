@@ -29,12 +29,33 @@ input LoginUserInput {
 
 type Mutation {
   login(loginUserInput: LoginUserInput!): LoginResponse!
+  refreshToken(refreshTokenInput: RefreshTokenInput!): RefreshTokenResponse!
   register(registerUserInput: RegisterUserInput!): RegisterResponse!
+}
+
+type Performance {
+  id: String!
+  maxDips: Float!
+  maxPullUps: Float!
+  maxPushUps: Float!
+  maxSquats: Float!
+  public_id: String!
+  user_id: String!
 }
 
 type Query {
   me: User!
   sayHello: String!
+}
+
+input RefreshTokenInput {
+  refresh_token: String!
+}
+
+type RefreshTokenResponse {
+  access_token: String!
+  refresh_token: String!
+  user: User!
 }
 
 type RegisterResponse {
@@ -52,10 +73,21 @@ input RegisterUserInput {
 type User {
   avatar: Avatar
   created_at: DateTime!
-  email: String!
-  google_id: String!
+  email: String
+  fitness_level: String
+  gender: String
+  goal_weight_unit: String
+  goal_weight_value: Float
+  goals: [String]
+  google_id: String
+  height_unit: String
+  height_value: Float
   id: String!
+  performance: Performance
   role: String!
+  spotify_id: String
   updated_at: DateTime!
   username: String
+  weight_unit: String
+  weight_value: Float
 }
