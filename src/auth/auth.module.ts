@@ -6,7 +6,7 @@ import { LocalStrategy } from '@auth/strategies/local.strategy';
 import { JwtModule } from '@nestjs/jwt';
 import * as process from 'node:process';
 import { JwtStrategy } from '@auth/strategies/jwt.strategy';
-import { PrismaService } from '@prisma/prisma.service';
+import { PrismaService } from '../prisma.service';
 import { AuthResolver } from '@auth/auth.resolver';
 import { GoogleStrategy } from '@auth/strategies/google.strategy';
 import { AuthController } from '@auth/auth.controller';
