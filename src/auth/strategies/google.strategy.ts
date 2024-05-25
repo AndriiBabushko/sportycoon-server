@@ -1,7 +1,7 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, VerifyCallback, Profile } from 'passport-google-oauth20';
-import { PrismaService } from '../../prisma.service';
+import { PrismaService } from '@prisma/prisma.service';
 import { AuthService } from '@auth/auth.service';
 
 @Injectable()
