@@ -24,7 +24,6 @@
   "dependencies": {
     "@apollo/gateway": "^2.7.3",
     "@apollo/subgraph": "^2.7.3",
-    "@magidoc/cli": "^5.0.3",
     "@nestjs/apollo": "^12.1.0",
     "@nestjs/class-validator": "^0.13.4",
     "@nestjs/common": "^10.0.0",
@@ -48,6 +47,7 @@
     "rxjs": "^7.8.1"
   },
   "devDependencies": {
+    "@magidoc/cli": "^5.0.3",
     "@nestjs/cli": "^10.0.0",
     "@nestjs/schematics": "^10.0.0",
     "@nestjs/testing": "^10.0.0",
