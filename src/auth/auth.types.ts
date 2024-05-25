@@ -1,63 +1,27 @@
-import { Field, ObjectType } from '@nestjs/graphql';
-import { User } from '@auth/auth.entity';
+export type RoleType = 'admin' | 'manager' | 'coach' | 'user';
 
-export type GenderType = 'Male' | 'Female';
+export type GenderType = 'male' | 'female' | 'other';
 
-export type HeightType = {
-  value: number;
-  unit: 'cm' | 'in';
-};
+export type HeightUnitType = 'cm' | 'in';
 
-export type WeightType = {
-  value: number;
-  unit: 'kg' | 'lbs';
-};
-
-export type GoalWeightType = {
-  value: number;
-  unit: 'kg' | 'lbs';
-};
+export type WeightUnitType = 'kg' | 'lbs';
 
 export type FitnessLevelType =
-  | 'Newbie'
-  | 'Beginner'
-  | 'Intermediate'
-  | 'Advanced';
+  | 'newbie'
+  | 'beginner'
+  | 'intermediate'
+  | 'advanced';
 
 export type GoalType =
-  | 'Build strength'
-  | 'Lose weight'
-  | 'Build muscle'
-  | 'Improve health'
-  | 'Learn techniques';
+  | 'build_strength'
+  | 'lose_weight'
+  | 'build_muscle'
+  | 'improve_health'
+  | 'learn_techniques';
 
-export type PerformanceType = {
-  maxPullUps: number;
-  maxPushUps: number;
-  maxSquats: number;
-  maxDips: number;
-};
-
-@ObjectType()
-export class LoginResponse {
-  @Field()
-  access_token: string;
-
-  @Field()
-  refresh_token: string;
-
-  @Field(() => User)
-  user: User;
-}
-
-@ObjectType()
-export class RegisterResponse {
-  @Field()
-  access_token: string;
-
-  @Field()
-  refresh_token: string;
-
-  @Field(() => User)
-  user: User;
+export interface JwtPayload {
+  email: string | null;
+  username: string | null;
+  google_id?: string | null;
+  spotify_id?: string | null;
 }

@@ -3,13 +3,15 @@ import {
   NotFoundException,
   ForbiddenException,
   ConflictException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { PrismaService } from '@prisma/prisma.service';
 import { UserService } from '@user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { RegisterUserInput } from '@auth/input/register-user.input';
 import { LoginUserInput } from '@auth/input/login-user.input';
-import { User } from '@auth/auth.entity';
+import { RefreshTokenResponse, User } from '@auth/auth.entity';
+import { JwtPayload } from '@auth/auth.types';
 
 @Injectable()
 export class AuthService {
@@ -99,26 +101,13 @@ export class AuthService {
     return null;
   }
 
-  async verify(accessToken: string) {
-    const decoded = this.jwtService.verify(accessToken, {
-      secret: process.env.JWT_SECRET,
-    });
-
-    const user = await this.prismaService.user.findUnique({
-      where: {
-        email: decoded.email,
-      },
-    });
-
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
-
-    return user;
-  }
-
   async generateTokens(user: User) {
-    const payload = { username: user.username, sub: user.email };
+    const payload: JwtPayload = {
+      username: user.username,
+      email: user.email,
+      google_id: user.google_id,
+      spotify_id: user.spotify_id,
+    };
 
     const accessToken = this.jwtService.sign(payload, {
       secret: process.env.JWT_SECRET,
@@ -130,5 +119,43 @@ export class AuthService {
     });
 
     return { access_token: accessToken, refresh_token: refreshToken };
+  }
+
+  async refreshToken(refreshToken: string): Promise<RefreshTokenResponse> {
+    const decoded: JwtPayload = this.jwtService.verify(refreshToken, {
+      secret: process.env.JWT_REFRESH_SECRET,
+    });
+
+    const userWithEmail = await this.prismaService.user.findUnique({
+      where: {
+        email: decoded.email,
+      },
+    });
+
+    const userWithGoogle = await this.prismaService.user.findUnique({
+      where: {
+        google_id: decoded.google_id || '',
+      },
+    });
+
+    const userWithSpotify = await this.prismaService.user.findUnique({
+      where: {
+        spotify_id: decoded.spotify_id || '',
+      },
+    });
+
+    if (!userWithEmail && !userWithGoogle && !userWithSpotify) {
+      throw new UnauthorizedException('User not found');
+    }
+
+    const { password: _password, ...user } =
+      userWithEmail || userWithGoogle || userWithSpotify;
+
+    const newTokens = await this.generateTokens(user);
+
+    return {
+      ...newTokens,
+      user,
+    };
   }
 }
