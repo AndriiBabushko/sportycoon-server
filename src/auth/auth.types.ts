@@ -18,3 +18,10 @@ export type GoalType =
   | 'build_muscle'
   | 'improve_health'
   | 'learn_techniques';
+
+export interface JwtPayload {
+  email: string | null;
+  username: string | null;
+  google_id?: string | null;
+  spotify_id?: string | null;
+}

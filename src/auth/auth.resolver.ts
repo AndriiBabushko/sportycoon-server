@@ -2,10 +2,16 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { AuthService } from '@auth/auth.service';
 import { RegisterUserInput } from '@auth/input/register-user.input';
 import { LoginUserInput } from '@auth/input/login-user.input';
-import { LoginResponse, RegisterResponse, User } from '@auth/auth.entity';
+import {
+  LoginResponse,
+  RefreshTokenResponse,
+  RegisterResponse,
+  User,
+} from '@auth/auth.entity';
 import { GqlAuthGuard } from '@auth/guards/gql-auth.guard';
 import { UseGuards } from '@nestjs/common';
 import { AuthUserDecorator } from '@auth/decorators/auth-user.decorator';
+import { RefreshTokenInput } from '@auth/input/refresh-token.input';
 
 @Resolver('Auth')
 export class AuthResolver {
@@ -32,5 +38,12 @@ export class AuthResolver {
   @Query(() => User, { name: 'me' })
   async getCurrentAuthUser(@AuthUserDecorator() user: User) {
     return user;
+  }
+
+  @Mutation(() => RefreshTokenResponse, { name: 'refreshToken' })
+  async refreshToken(
+    @Args('refreshTokenInput') refreshTokenInput: RefreshTokenInput,
+  ) {
+    return await this.authService.refreshToken(refreshTokenInput.refresh_token);
   }
 }

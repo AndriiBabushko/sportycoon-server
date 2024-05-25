@@ -29,6 +29,7 @@ input LoginUserInput {
 
 type Mutation {
   login(loginUserInput: LoginUserInput!): LoginResponse!
+  refreshToken(refreshTokenInput: RefreshTokenInput!): RefreshTokenResponse!
   register(registerUserInput: RegisterUserInput!): RegisterResponse!
 }
 
@@ -45,6 +46,16 @@ type Performance {
 type Query {
   me: User!
   sayHello: String!
+}
+
+input RefreshTokenInput {
+  refresh_token: String!
+}
+
+type RefreshTokenResponse {
+  access_token: String!
+  refresh_token: String!
+  user: User!
 }
 
 type RegisterResponse {
