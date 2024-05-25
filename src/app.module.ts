@@ -4,7 +4,6 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { AuthModule } from '@auth/auth.module';
 import { join } from 'path';
-import { ShopService } from './shop/shop.service';
 import { ShopModule } from './shop/shop.module';
 import { ForumModule } from './forum/forum.module';
 import { TrainingModule } from './training/training.module';
@@ -16,6 +15,11 @@ import { StaticModule } from './static/static.module';
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       sortSchema: true,
+      introspection: true,
+      csrfPrevention: true,
+      context: ({ req }) => ({
+        headers: req.headers,
+      }),
     }),
     UserModule,
     AuthModule,
@@ -24,6 +28,6 @@ import { StaticModule } from './static/static.module';
     TrainingModule,
     StaticModule,
   ],
-  providers: [ShopService],
+  providers: [],
 })
 export class AppModule {}
