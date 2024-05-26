@@ -11,6 +11,17 @@ type Avatar {
   user_id: String!
 }
 
+input CreateShopItemInput {
+  bundle_discount: Float
+  category_id: String!
+  description: String!
+  images: [String!]!
+  name: String!
+  preview: String!
+  price: Float!
+  user_id: String
+}
+
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
@@ -27,10 +38,31 @@ input LoginUserInput {
   password: String!
 }
 
+type Modifier {
+  created_at: DateTime!
+  id: String!
+  name: String!
+  options: [ModifierOption!]!
+  updated_at: DateTime!
+}
+
+type ModifierOption {
+  created_at: DateTime!
+  id: String!
+  modifier: Modifier!
+  modifier_id: String!
+  shop_item_modifiers: [ShopItemModifier!]!
+  updated_at: DateTime!
+  value: String!
+}
+
 type Mutation {
+  createShopItem(data: CreateShopItemInput!): ShopItem!
+  deleteShopItem(id: String!): ShopItem!
   login(loginUserInput: LoginUserInput!): LoginResponse!
   refreshToken(refreshTokenInput: RefreshTokenInput!): RefreshTokenResponse!
   register(registerUserInput: RegisterUserInput!): RegisterResponse!
+  updateShopItem(data: UpdateShopItemInput!, id: String!): ShopItem!
 }
 
 type Performance {
@@ -44,6 +76,8 @@ type Performance {
 }
 
 type Query {
+  getShopItemById(id: String!): ShopItem!
+  getShopItems: [ShopItem!]!
   me: User!
   sayHello: String!
 }
@@ -68,6 +102,77 @@ input RegisterUserInput {
   email: String!
   password: String!
   username: String!
+}
+
+type ShopCart {
+  created_at: DateTime!
+  id: String!
+  items: [ShopCartItem!]!
+  updated_at: DateTime!
+  user: User!
+  user_id: String!
+}
+
+type ShopCartItem {
+  created_at: DateTime!
+  id: String!
+  quantity: Int!
+  shop_cart: ShopCart!
+  shop_cart_id: String!
+  shop_item: ShopItem!
+  shop_item_id: String!
+  updated_at: DateTime!
+}
+
+type ShopCategory {
+  created_at: DateTime!
+  description: String!
+  id: String!
+  items: [ShopItem!]!
+  name: String!
+  parent: ShopCategory
+  parent_id: String
+  subcategories: [ShopCategory!]
+  updated_at: DateTime!
+}
+
+type ShopItem {
+  bundle_discount: Float
+  cart_items: [ShopCartItem!]!
+  category: ShopCategory!
+  category_id: String!
+  created_at: DateTime!
+  description: String!
+  id: String!
+  images: [String!]!
+  modifiers: [ShopItemModifier!]!
+  name: String!
+  preview: String!
+  price: Float!
+  updated_at: DateTime!
+  user: User
+  user_id: String!
+}
+
+type ShopItemModifier {
+  created_at: DateTime!
+  id: String!
+  modifier_option: ModifierOption!
+  modifier_option_id: String!
+  shop_item: ShopItem!
+  shop_item_id: String!
+  updated_at: DateTime!
+}
+
+input UpdateShopItemInput {
+  bundle_discount: Float
+  category_id: String
+  description: String
+  images: [String!]
+  name: String
+  preview: String
+  price: Float
+  user_id: String
 }
 
 type User {
