@@ -43,7 +43,7 @@ export class ShopItem {
   @Field(() => User, { nullable: true })
   user?: User;
 
-  @Field()
+  @Field(() => String, { nullable: true })
   user_id?: string;
 
   @Field(() => ShopCategory)

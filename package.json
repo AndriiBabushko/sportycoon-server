@@ -40,6 +40,7 @@
     "class-transformer": "^0.5.1",
     "express-session": "^1.17.3",
     "graphql": "^16.8.1",
+    "@graphql-tools/utils": "^7",
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
     "passport-jwt": "^4.0.1",

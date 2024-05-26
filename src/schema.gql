@@ -151,7 +151,7 @@ type ShopItem {
   price: Float!
   updated_at: DateTime!
   user: User
-  user_id: String!
+  user_id: String
 }
 
 type ShopItemModifier {
