@@ -2,15 +2,15 @@ import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { PassportModule } from '@nestjs/passport';
 import { UserModule } from '@user/user.module';
-import { LocalStrategy } from '@auth/strategies/local.strategy';
+import { LocalStrategy } from '@auth/strategy/local.strategy';
 import { JwtModule } from '@nestjs/jwt';
 import * as process from 'node:process';
-import { JwtStrategy } from '@auth/strategies/jwt.strategy';
+import { JwtStrategy } from '@auth/strategy/jwt.strategy';
 import { PrismaService } from '@prisma/prisma.service';
 import { AuthResolver } from '@auth/auth.resolver';
-import { GoogleStrategy } from '@auth/strategies/google.strategy';
+import { GoogleStrategy } from '@auth/strategy/google.strategy';
 import { AuthController } from '@auth/auth.controller';
-import { SpotifyStrategy } from '@auth/strategies/spotify.strategy';
+import { SpotifyStrategy } from '@auth/strategy/spotify.strategy';
 
 @Module({
   controllers: [AuthController],

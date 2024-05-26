@@ -8,9 +8,9 @@ import {
   RegisterResponse,
   User,
 } from '@auth/auth.entity';
-import { GqlAuthGuard } from '@auth/guards/gql-auth.guard';
+import { GqlAuthGuard } from '@auth/guard/gql-auth.guard';
 import { UseGuards } from '@nestjs/common';
-import { AuthUserDecorator } from '@auth/decorators/auth-user.decorator';
+import { AuthUserDecorator } from '@auth/decorator/auth-user.decorator';
 import { RefreshTokenInput } from '@auth/input/refresh-token.input';
 
 @Resolver('Auth')
