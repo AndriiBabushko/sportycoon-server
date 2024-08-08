@@ -11,6 +11,31 @@ type Avatar {
   user_id: String!
 }
 
+input CreateModifierInput {
+  name: String!
+}
+
+input CreateModifierOptionInput {
+  modifier_id: String!
+  value: String!
+}
+
+input CreateShopCartInput {
+  user_id: String!
+}
+
+input CreateShopCartItemInput {
+  quantity: Int!
+  shop_cart_id: String!
+  shop_item_id: String!
+}
+
+input CreateShopCategoryInput {
+  description: String!
+  name: String!
+  parent_id: String
+}
+
 input CreateShopItemInput {
   bundle_discount: Float
   category_id: String!
@@ -57,11 +82,26 @@ type ModifierOption {
 }
 
 type Mutation {
+  createModifier(data: CreateModifierInput!): Modifier!
+  createModifierOption(data: CreateModifierOptionInput!): ModifierOption!
+  createShopCart(data: CreateShopCartInput!): ShopCart!
+  createShopCartItem(data: CreateShopCartItemInput!): ShopCartItem!
+  createShopCategory(data: CreateShopCategoryInput!): ShopCategory!
   createShopItem(data: CreateShopItemInput!): ShopItem!
+  deleteModifier(id: String!): Modifier!
+  deleteModifierOption(id: String!): ModifierOption!
+  deleteShopCart(id: String!): ShopCart!
+  deleteShopCartItem(id: String!): ShopCartItem!
+  deleteShopCategory(id: String!): ShopCategory!
   deleteShopItem(id: String!): ShopItem!
   login(loginUserInput: LoginUserInput!): LoginResponse!
   refreshToken(refreshTokenInput: RefreshTokenInput!): RefreshTokenResponse!
   register(registerUserInput: RegisterUserInput!): RegisterResponse!
+  updateModifier(data: UpdateModifierInput!, id: String!): Modifier!
+  updateModifierOption(data: UpdateModifierOptionInput!, id: String!): ModifierOption!
+  updateShopCart(data: UpdateShopCartInput!, id: String!): ShopCart!
+  updateShopCartItem(data: UpdateShopCartItemInput!, id: String!): ShopCartItem!
+  updateShopCategory(data: UpdateShopCategoryInput!, id: String!): ShopCategory!
   updateShopItem(data: UpdateShopItemInput!, id: String!): ShopItem!
 }
 
@@ -76,6 +116,16 @@ type Performance {
 }
 
 type Query {
+  getModifierById(id: String!): Modifier!
+  getModifierOptionById(id: String!): ModifierOption!
+  getModifierOptions: [ModifierOption!]!
+  getModifiers: [Modifier!]!
+  getShopCartById(id: String!): ShopCart!
+  getShopCartItemById(id: String!): ShopCartItem!
+  getShopCartItems: [ShopCartItem!]!
+  getShopCarts: [ShopCart!]!
+  getShopCategories: [ShopCategory!]!
+  getShopCategoryById(id: String!): ShopCategory!
   getShopItemById(id: String!): ShopItem!
   getShopItems: [ShopItem!]!
   me: User!
@@ -162,6 +212,31 @@ type ShopItemModifier {
   shop_item: ShopItem!
   shop_item_id: String!
   updated_at: DateTime!
+}
+
+input UpdateModifierInput {
+  name: String
+}
+
+input UpdateModifierOptionInput {
+  modifier_id: String
+  value: String
+}
+
+input UpdateShopCartInput {
+  user_id: String
+}
+
+input UpdateShopCartItemInput {
+  quantity: Int
+  shop_cart_id: String
+  shop_item_id: String
+}
+
+input UpdateShopCategoryInput {
+  description: String
+  name: String
+  parent_id: String
 }
 
 input UpdateShopItemInput {
