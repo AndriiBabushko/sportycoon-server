@@ -1,1 +1,4 @@
-magidoc generate
+#!/usr/bin/env sh
+
+pnpm run lint
+pnpm run format

@@ -9,6 +9,7 @@ export class AuthController {
 
   @UseGuards(GoogleAuthGuard)
   @Get('/auth/google')
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async googleAuth(@Req() req: Request) {}
 
   @UseGuards(GoogleAuthGuard)
@@ -22,6 +23,7 @@ export class AuthController {
 
   @UseGuards(SpotifyAuthGuard)
   @Get('/auth/spotify')
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async spotifyAuth(@Req() req: Request) {}
 
   @UseGuards(SpotifyAuthGuard)
