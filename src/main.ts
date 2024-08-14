@@ -20,10 +20,12 @@ async function bootstrap() {
       'Authorization',
       'Content-Type',
       'X-Requested-With',
+      'x-apollo-operation-name',
       'apollo-require-preflight',
     ],
     methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
   });
+
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
