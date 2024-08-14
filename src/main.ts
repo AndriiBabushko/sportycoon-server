@@ -20,10 +20,19 @@ async function bootstrap() {
       'Authorization',
       'Content-Type',
       'X-Requested-With',
-      'x-apollo-operation-name',
       'apollo-require-preflight',
     ],
     methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
+  });
+
+  app.use((req, res, next) => {
+    if (req.path === '/graphql') {
+      // Disable CSRF protection
+      res.setHeader('Access-Control-Allow-Origin', '*');
+      res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+      res.setHeader('Apollo-Require-Preflight', true);
+    }
+    next();
   });
 
   app.useGlobalPipes(
