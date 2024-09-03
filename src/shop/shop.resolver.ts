@@ -21,7 +21,6 @@ import {
   ShopCartItem,
   ShopCategory,
   ShopItem,
-  ShopItemModifier,
 } from './entities';
 import { UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from '@auth/guard/gql-auth.guard';

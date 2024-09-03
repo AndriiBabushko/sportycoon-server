@@ -10,7 +10,7 @@
     "start": "prisma generate && nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
-    "start:prod": "node dist/src/main",
+    "start:prod": "prisma generate && node dist/src/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -26,6 +26,7 @@
   "dependencies": {
     "@apollo/gateway": "^2.7.3",
     "@apollo/subgraph": "^2.7.3",
+    "@fastify/csrf-protection": "^6.4.1",
     "@graphql-tools/utils": "^7",
     "@nestjs/apollo": "^12.1.0",
     "@nestjs/class-validator": "^0.13.4",

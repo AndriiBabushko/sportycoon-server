@@ -14,6 +14,9 @@ importers:
       '@apollo/subgraph':
         specifier: ^2.7.3
         version: 2.7.3(graphql@16.8.1)
+      '@fastify/csrf-protection':
+        specifier: ^6.4.1
+        version: 6.4.1
       '@graphql-tools/utils':
         specifier: ^7
         version: 7.10.0(graphql@16.8.1)
@@ -559,6 +562,15 @@ packages:
   '@fastify/busboy@2.1.1':
     resolution: {integrity: sha512-vBZP4NlzfOlerQTnba4aqZoMhE/a9HY7HRqoOPaETQcSQuWEIyZMHGfVu6w9wGtGK5fED5qRs2DteVCjOH60sA==}
     engines: {node: '>=14'}
+
+  '@fastify/csrf-protection@6.4.1':
+    resolution: {integrity: sha512-nP1xjruddvWMvqjxTVzpLqWVLAX7P/XWkeTaARg3bXVrVmpDWjDMN7KfV3swIT/XexjDooMo+QG/n0n6ynZaiw==}
+
+  '@fastify/csrf@6.3.0':
+    resolution: {integrity: sha512-6w0gZZf4an8SGRYUS0nECTJb8eI45h/YIFkf2GJnba+mS+aJg0ArpS6Y8HXgLVvPxUGtQZYNB2z+UpISJ3v3Ug==}
+
+  '@fastify/error@3.4.1':
+    resolution: {integrity: sha512-wWSvph+29GR783IhmvdwWnN4bUxTD01Vm5Xad4i7i1VuAOItLvbPAb69sb0IQ2N57yprvhNIwAP5B6xfKTmjmQ==}
 
   '@graphql-tools/merge@8.4.2':
     resolution: {integrity: sha512-XbrHAaj8yDuINph+sAfuq3QCZ/tKblrTLOpirK0+CAgNlZUCHs0Fa+xtMUURgwCVThLle1AF7svJCxFizygLsw==}
@@ -2350,6 +2362,9 @@ packages:
 
   fast-safe-stringify@2.1.1:
     resolution: {integrity: sha512-W+KJc2dmILlPplD/H4K9l9LcAHAfPtP6BY84uVLXQ6Evcz9Lcg33Y2z1IVblT6xdY54PXYVHEv+0Wpq8Io6zkA==}
+
+  fastify-plugin@4.5.1:
+    resolution: {integrity: sha512-stRHYGeuqpEZTL1Ef0Ovr2ltazUT9g844X5z/zEBFLG8RYlpDiOCIG+ATvYEp+/zmc7sN29mcIMp8gvYplYPIQ==}
 
   fastq@1.16.0:
     resolution: {integrity: sha512-ifCoaXsDrsdkWTtiNJX5uzHDsrck5TzfKKDcuFFTIrrc/BS076qgEIfoIy1VeZqViznfKiysPYTh/QeHtnIsYA==}
@@ -5158,6 +5173,16 @@ snapshots:
 
   '@fastify/busboy@2.1.1': {}
 
+  '@fastify/csrf-protection@6.4.1':
+    dependencies:
+      '@fastify/csrf': 6.3.0
+      '@fastify/error': 3.4.1
+      fastify-plugin: 4.5.1
+
+  '@fastify/csrf@6.3.0': {}
+
+  '@fastify/error@3.4.1': {}
+
   '@graphql-tools/merge@8.4.2(graphql@16.8.1)':
     dependencies:
       '@graphql-tools/utils': 9.2.1(graphql@16.8.1)
@@ -7409,6 +7434,8 @@ snapshots:
   fast-levenshtein@2.0.6: {}
 
   fast-safe-stringify@2.1.1: {}
+
+  fastify-plugin@4.5.1: {}
 
   fastq@1.16.0:
     dependencies:
