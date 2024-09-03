@@ -21,7 +21,8 @@
     "db:studio": "npx prisma studio",
     "db:format": "npx prisma format",
     "db:seed": "npx ts-node prisma/seed.ts",
-    "prepare": "husky"
+    "prepare": "husky",
+    "deps:reinstall": "rm -rf node_modules && pnpm install"
   },
   "dependencies": {
     "@apollo/gateway": "^2.7.3",
@@ -52,6 +53,8 @@
     "rxjs": "^7.8.1"
   },
   "devDependencies": {
+    "@commitlint/cli": "^18.4.3",
+    "@commitlint/config-conventional": "^18.4.3",
     "@faker-js/faker": "^8.4.1",
     "@magidoc/cli": "^6.0.1",
     "@nestjs/cli": "^10.0.0",

@@ -5,6 +5,7 @@ import {
   IsString,
   MinLength,
 } from '@nestjs/class-validator';
+import { GenderType } from '@auth/auth.types';
 
 @InputType()
 export class RegisterUserInput {
@@ -28,8 +29,8 @@ export class RegisterUserInput {
   // @IsString({ message: 'Full name must be a string' })
   // full_name: string;
 
-  // @IsNotEmpty({ message: 'Gender is re' })
-  // gender: GenderType;
+  @IsNotEmpty({ message: 'Gender is required' })
+  gender: GenderType;
   //
   // @IsNotEmpty({ message: 'Height is required' })
   // height: HeightType;
