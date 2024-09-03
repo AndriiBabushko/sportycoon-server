@@ -18,16 +18,19 @@ jobs:
         with:
           node-version: '20'
 
+      - name: Install pnpm
+        run: npm install -g pnpm
+
       - name: Install dependencies
         run: |
-          npm install conventional-changelog-conventionalcommits
-          npm install @commitlint/cli @commitlint/config-conventional
+          pnpm install
 
       - name: Print versions
         run: |
           git --version
           node --version
           npm --version
+          pnpm --version
           npx commitlint --version
 
       - name: Validate current commit (last commit) with commitlint
