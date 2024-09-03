@@ -14,7 +14,10 @@ export default {
     template: 'carbon-multi-page',
     options: {
       queryGenerationFactories: {
-        'FitnessLevelScalar': 'INTERMEDIATE'
+        'FitnessLevelScalar': 'INTERMEDIATE',
+        'GenderScalar': 'MALE',
+        'HeightUnitScalar': 'CM',
+        'WeightUnitScalar': 'KG',
       }
     }
   },
