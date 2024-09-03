@@ -52,6 +52,46 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+"""
+FitnessLevel custom scalar type, allowed values are NEWBIE, BEGINNER, INTERMEDIATE, ADVANCED
+"""
+scalar FitnessLevelScalar
+
+"""Possible goals for training"""
+enum GOAL {
+  BUILD_MUSCLE
+  BUILD_STRENGTH
+  IMPROVE_HEALTH
+  LEARN_TECHNIQUES
+  LOSE_WEIGHT
+}
+
+"""Gender custom scalar type, allowed values are MALE, FEMALE, OTHER"""
+scalar GenderScalar
+
+type GoalWeight {
+  unit: WeightUnitScalar!
+  value: Float!
+}
+
+input GoalWeightInput {
+  unit: WeightUnitScalar!
+  value: Float!
+}
+
+type Height {
+  unit: HeightUnitScalar!
+  value: Float!
+}
+
+input HeightInput {
+  unit: HeightUnitScalar!
+  value: Float!
+}
+
+"""Height unit custom scalar type, allowed values are CM and IN"""
+scalar HeightUnitScalar
+
 type LoginResponse {
   access_token: String!
   refresh_token: String!
@@ -107,12 +147,18 @@ type Mutation {
 
 type Performance {
   id: String!
-  maxDips: Float!
-  maxPullUps: Float!
-  maxPushUps: Float!
-  maxSquats: Float!
-  public_id: String!
+  max_dips: Float!
+  max_pull_ups: Float!
+  max_push_ups: Float!
+  max_squats: Float!
   user_id: String!
+}
+
+input PerformanceInput {
+  max_dips: Float!
+  max_pull_ups: Float!
+  max_push_ups: Float!
+  max_squats: Float!
 }
 
 type Query {
@@ -150,8 +196,16 @@ type RegisterResponse {
 
 input RegisterUserInput {
   email: String!
+  fitness_level: FitnessLevelScalar!
+  full_name: String!
+  gender: GenderScalar!
+  goal_weight: GoalWeightInput!
+  goals: [GOAL!]!
+  height: HeightInput!
   password: String!
+  performance: PerformanceInput!
   username: String!
+  weight: WeightInput!
 }
 
 type ShopCart {
@@ -254,20 +308,30 @@ type User {
   avatar: Avatar
   created_at: DateTime!
   email: String
-  fitness_level: String
-  gender: String
-  goal_weight_unit: String
-  goal_weight_value: Float
-  goals: [String]
+  fitness_level: FitnessLevelScalar
+  gender: GenderScalar
+  goal_weight: GoalWeight
+  goals: [GOAL]
   google_id: String
-  height_unit: String
-  height_value: Float
+  height: Height
   id: String!
   performance: Performance
   role: String!
   spotify_id: String
   updated_at: DateTime!
   username: String
-  weight_unit: String
-  weight_value: Float
+  weight: Weight
 }
+
+type Weight {
+  unit: WeightUnitScalar!
+  value: Float!
+}
+
+input WeightInput {
+  unit: WeightUnitScalar!
+  value: Float!
+}
+
+"""Weight unit custom scalar type, allowed values are KG and LBS"""
+scalar WeightUnitScalar

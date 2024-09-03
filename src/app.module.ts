@@ -7,7 +7,10 @@ import { join } from 'path';
 import { ShopModule } from './shop/shop.module';
 import { ForumModule } from './forum/forum.module';
 import { TrainingModule } from './training/training.module';
-import { StaticModule } from './static/static.module';
+import { GenderScalar } from '@scalars/gender.scalar';
+import { HeightUnitScalar } from '@scalars/height-unit.scalar';
+import { WeightUnitScalar } from '@scalars/weight-unit.scalar';
+import { FitnessLevelScalar } from '@scalars/fitness-level.scalar';
 
 @Module({
   imports: [
@@ -26,8 +29,12 @@ import { StaticModule } from './static/static.module';
     ShopModule,
     ForumModule,
     TrainingModule,
-    StaticModule,
   ],
-  providers: [],
+  providers: [
+    GenderScalar,
+    HeightUnitScalar,
+    WeightUnitScalar,
+    FitnessLevelScalar,
+  ],
 })
 export class AppModule {}

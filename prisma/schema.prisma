@@ -8,41 +8,41 @@ datasource db {
 }
 
 enum Role {
-  admin
-  manager
-  coach
-  user
+  ADMIN
+  MANAGER
+  COACH
+  USER
 }
 
 enum Gender {
-  male
-  female
-  other
+  MALE
+  FEMALE
+  OTHER
 }
 
 enum FitnessLevel {
-  newbie
-  beginner
-  intermediate
-  advanced
+  NEWBIE
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
 }
 
 enum Goal {
-  build_strength
-  lose_weight
-  build_muscle
-  improve_health
-  learn_techniques
+  BUILD_STRENGTH
+  LOSE_WEIGHT
+  BUILD_MUSCLE
+  IMPROVE_HEALTH
+  LEARN_TECHNIQUES
 }
 
 enum HeightUnit {
-  cm
-  in
+  CM
+  IN
 }
 
 enum WeightUnit {
-  kg
-  lbs
+  KG
+  LBS
 }
 
 model Avatar {
@@ -56,39 +56,60 @@ model Avatar {
 }
 
 model Performance {
-  id         String @id @default(uuid()) @db.Uuid
-  public_id  String
-  maxPullUps Int
-  maxPushUps Int
-  maxSquats  Int
-  maxDips    Int
-  user       User   @relation(fields: [user_id], references: [id])
-  user_id    String @unique @db.Uuid
+  id           String @id @default(uuid()) @db.Uuid
+  max_pull_ups Int
+  max_push_ups Int
+  max_squats   Int
+  max_dips     Int
+  user         User   @relation(fields: [user_id], references: [id])
+  user_id      String @unique @db.Uuid
+}
+
+model Height {
+  id      String     @id @default(uuid()) @db.Uuid
+  value   Float
+  unit    HeightUnit
+  user    User       @relation(fields: [user_id], references: [id])
+  user_id String     @unique @db.Uuid
+}
+
+model Weight {
+  id      String     @id @default(uuid()) @db.Uuid
+  value   Float
+  unit    WeightUnit
+  user    User       @relation(fields: [user_id], references: [id])
+  user_id String     @unique @db.Uuid
+}
+
+model GoalWeight {
+  id      String     @id @default(uuid()) @db.Uuid
+  value   Float
+  unit    WeightUnit
+  user    User       @relation(fields: [user_id], references: [id])
+  user_id String     @unique @db.Uuid
 }
 
 model User {
-  id                String        @id @default(uuid()) @db.Uuid
-  email             String?       @unique
-  username          String?       @unique
-  gender            Gender?
-  height_value      Float?
-  height_unit       HeightUnit?
-  weight_value      Float?
-  weight_unit       WeightUnit?
-  goal_weight_value Float?
-  goal_weight_unit  WeightUnit?
-  fitness_level     FitnessLevel?
-  goals             Goal[]
-  performance       Performance?
-  password          String?
-  role              Role          @default(user)
-  avatar            Avatar?
-  shop_cart         ShopCart?
-  wishlist          ShopItem[]
-  created_at        DateTime      @default(now())
-  updated_at        DateTime      @updatedAt
-  google_id         String?       @unique
-  spotify_id        String?       @unique
+  id            String        @id @default(uuid()) @db.Uuid
+  email         String?       @unique
+  username      String?       @unique
+  full_name     String?
+  gender        Gender?
+  height        Height?
+  weight        Weight?
+  goal_weight   GoalWeight?
+  fitness_level FitnessLevel?
+  goals         Goal[]
+  performance   Performance?
+  password      String?
+  role          Role          @default(USER)
+  avatar        Avatar?
+  shop_cart     ShopCart?
+  wishlist      ShopItem[]
+  created_at    DateTime      @default(now())
+  updated_at    DateTime      @updatedAt
+  google_id     String?       @unique
+  spotify_id    String?       @unique
 }
 
 model ShopCart {
