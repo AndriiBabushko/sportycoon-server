@@ -11,11 +11,15 @@
     "outDir": "./dist",
     "baseUrl": ".",
     "paths": {
+      "@assets/*": ["assets/*"],
       "@prisma/*": ["prisma/*"],
-      "@src/types/*": ["src/types/*"],
-      "@user/*": ["src/user/*"],
       "@auth/*": ["src/auth/*"],
-      "@config/*": ["src/config/*"]
+      "@forum/*": ["src/forum/*"],
+      "@scalars/*": ["src/scalars/*"],
+      "@shop/*": ["src/shop/*"],
+      "@training/*": ["src/training/*"],
+      "@user/*": ["src/user/*"],
+      "@views/*": ["src/views/*"],
     },
     "incremental": true,
     "skipLibCheck": true,

@@ -12,5 +12,13 @@ export default {
   website: {
     staticAssets: path.join(__dirname, 'assets'),
     template: 'carbon-multi-page',
+    options: {
+      queryGenerationFactories: {
+        'FitnessLevelScalar': 'INTERMEDIATE',
+        'GenderScalar': 'MALE',
+        'HeightUnitScalar': 'CM',
+        'WeightUnitScalar': 'KG',
+      }
+    }
   },
 }
