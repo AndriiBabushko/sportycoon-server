@@ -47,7 +47,18 @@ export class AuthService {
   }
 
   async register(registerUserInput: RegisterUserInput) {
-    const { email, password, username } = registerUserInput;
+    const {
+      email,
+      password,
+      username,
+      gender,
+      full_name,
+      height,
+      weight,
+      goal_weight,
+      fitness_level,
+      goals,
+    } = registerUserInput;
 
     const isEmailExist = await this.prismaService.user.findUnique({
       where: {
@@ -76,6 +87,19 @@ export class AuthService {
         email,
         password: hashedPassword,
         username,
+        full_name,
+        gender: gender ? gender : undefined,
+        height: height
+          ? { create: { value: height.value, unit: height.unit } }
+          : undefined,
+        weight: weight
+          ? { create: { value: weight.value, unit: weight.unit } }
+          : undefined,
+        goal_weight: goal_weight
+          ? { create: { value: goal_weight.value, unit: goal_weight.unit } }
+          : undefined,
+        fitness_level: fitness_level ? fitness_level : undefined,
+        goals,
       },
     });
 

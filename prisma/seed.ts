@@ -100,7 +100,7 @@ async function main() {
       email: 'user@example.com',
       username: 'user1',
       password: 'password123',
-      role: 'user',
+      role: 'USER',
       shop_cart: {
         create: {
           items: {
