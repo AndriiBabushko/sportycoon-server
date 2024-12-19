@@ -44,6 +44,7 @@ export class AuthResolver {
   async refreshToken(
     @Args('refreshTokenInput') refreshTokenInput: RefreshTokenInput,
   ) {
+    // console.log(refreshTokenInput);
     return await this.authService.refreshToken(refreshTokenInput.refresh_token);
   }
 }
