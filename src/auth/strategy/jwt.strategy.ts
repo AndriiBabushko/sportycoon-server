@@ -15,34 +15,40 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: JwtPayload) {
-    const userWithEmail = this.prismaService.user.findUnique({
-      where: {
-        email: payload.email,
-      },
-    });
+    if (payload.google_id) {
+      const userWithGoogle = this.prismaService.user.findUnique({
+        where: {
+          google_id: payload.google_id,
+        },
+      });
 
-    if (userWithEmail) {
-      return userWithEmail;
+      if (userWithGoogle) {
+        return userWithGoogle;
+      }
     }
 
-    const userWithGoogle = this.prismaService.user.findUnique({
-      where: {
-        google_id: payload.google_id,
-      },
-    });
+    if (payload.spotify_id) {
+      const userWithSpotify = this.prismaService.user.findUnique({
+        where: {
+          spotify_id: payload.spotify_id,
+        },
+      });
 
-    if (userWithGoogle) {
-      return userWithGoogle;
+      if (userWithSpotify) {
+        return userWithSpotify;
+      }
     }
 
-    const userWithSpotify = this.prismaService.user.findUnique({
-      where: {
-        spotify_id: payload.spotify_id,
-      },
-    });
+    if (payload.email) {
+      const userWithEmail = this.prismaService.user.findUnique({
+        where: {
+          email: payload.email,
+        },
+      });
 
-    if (userWithSpotify) {
-      return userWithSpotify;
+      if (userWithEmail) {
+        return userWithEmail;
+      }
     }
 
     return null;
