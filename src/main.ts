@@ -31,6 +31,12 @@ async function bootstrap() {
       res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
       res.setHeader('Apollo-Require-Preflight', true);
     }
+    console.log('Request:', req.method, req.path);
+    if (req.method === 'GET') {
+      res.setHeader('Access-Control-Allow-Origin', '*');
+      res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+      res.setHeader('Apollo-Require-Preflight', true);
+    }
     next();
   });
 
