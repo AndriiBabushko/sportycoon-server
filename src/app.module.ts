@@ -4,9 +4,6 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { AuthModule } from '@auth/auth.module';
 import { join } from 'path';
-import { ShopModule } from './shop/shop.module';
-import { ForumModule } from './forum/forum.module';
-import { TrainingModule } from './training/training.module';
 import { GenderScalar } from '@scalars/gender.scalar';
 import { HeightUnitScalar } from '@scalars/height-unit.scalar';
 import { WeightUnitScalar } from '@scalars/weight-unit.scalar';
@@ -26,9 +23,6 @@ import { FitnessLevelScalar } from '@scalars/fitness-level.scalar';
     }),
     UserModule,
     AuthModule,
-    ShopModule,
-    ForumModule,
-    TrainingModule,
   ],
   providers: [
     GenderScalar,
