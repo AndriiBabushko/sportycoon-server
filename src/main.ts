@@ -17,16 +17,10 @@ async function bootstrap() {
       'http://localhost:8080',
       'http://localhost:8000',
       'https://sportycoon-dashboard.vercel.app',
+      'https://sportycoon-server.onrender.com',
       'https://sportycoon.vercel.app',
     ],
     credentials: true,
-    allowedHeaders: [
-      'Accept',
-      'Authorization',
-      'Content-Type',
-      'X-Requested-With',
-      'apollo-require-preflight',
-    ],
     methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
   });
 
