@@ -147,7 +147,7 @@ export class AuthService {
 
   async refreshToken(refreshToken: string): Promise<RefreshTokenResponse> {
     const decoded: JwtPayload = this.jwtService.verify(refreshToken, {
-      secret: process.env.JWT_REFRESH_SECRET,
+      secret: process.env.JWT_SECRET,
     });
 
     const userWithEmail = await this.prismaService.user.findUnique({

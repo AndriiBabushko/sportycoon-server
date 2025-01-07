@@ -3,6 +3,5 @@ module.exports = {
   rules: {
     'header-min-length': [2, 'always', 15],
     'type-empty': [2, 'never'],
-    'subject-empty': [2, 'never'],
   },
 };

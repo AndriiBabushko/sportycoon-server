@@ -13,7 +13,12 @@ console.log(
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.enableCors({
-    origin: '*',
+    origin: [
+      'http://localhost:8080',
+      'http://localhost:8000',
+      'https://sportycoon-dashboard.vercel.app',
+      'https://sportycoon.vercel.app',
+    ],
     credentials: true,
     allowedHeaders: [
       'Accept',
