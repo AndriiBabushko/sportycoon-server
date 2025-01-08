@@ -1,9 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import { join } from 'path';
 import * as process from 'node:process';
-import { ValidationPipe } from '@nestjs/common';
 
 const port = process.env.API_PORT || 3000;
 console.log(
@@ -20,33 +18,34 @@ async function bootstrap() {
       'https://sportycoon-server.onrender.com',
       'https://sportycoon.vercel.app',
     ],
-    methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
   });
 
   app.use((req, res, next) => {
+    res.header(
+      'Access-Control-Allow-Origin',
+      process.env.SPORTYCOON_DASHBOARD_URL || '*',
+    );
     if (req.path === '/graphql') {
-      // Disable CSRF protection
       res.setHeader('Access-Control-Allow-Origin', '*');
       res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
       res.setHeader('Apollo-Require-Preflight', true);
     }
-    if (req.method === 'GET') {
-      res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
-      res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-      res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
-    }
+
     next();
   });
 
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-      forbidNonWhitelisted: true,
-    }),
-  );
-  app.useStaticAssets(join(__dirname, '..', 'public'));
-  app.setBaseViewsDir(join(__dirname, '..', 'src/views'));
-  app.setViewEngine('ejs');
+  // app.useGlobalPipes(
+  //   new ValidationPipe({
+  //     whitelist: true,
+  //     forbidNonWhitelisted: true,
+  //   }),
+  // );
+  // app.useStaticAssets(join(__dirname, '..', 'public'));
+  // app.setBaseViewsDir(join(__dirname, '..', 'src/views'));
+  // app.setViewEngine('ejs');
 
   await app.listen(port, '0.0.0.0');
 }
