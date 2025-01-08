@@ -20,7 +20,6 @@ async function bootstrap() {
       'https://sportycoon-server.onrender.com',
       'https://sportycoon.vercel.app',
     ],
-    credentials: true,
     methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
   });
 
@@ -31,11 +30,10 @@ async function bootstrap() {
       res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
       res.setHeader('Apollo-Require-Preflight', true);
     }
-    if (req.method === 'OPTIONS') {
+    if (req.method === 'GET') {
       res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
       res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
       res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
-      res.sendStatus(200);
     }
     next();
   });
