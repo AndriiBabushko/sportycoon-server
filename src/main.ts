@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import * as process from 'node:process';
+import { ValidationPipe } from '@nestjs/common';
 
 const port = process.env.API_PORT || 3000;
 console.log(
@@ -37,12 +38,7 @@ async function bootstrap() {
     next();
   });
 
-  // app.useGlobalPipes(
-  //   new ValidationPipe({
-  //     whitelist: true,
-  //     forbidNonWhitelisted: true,
-  //   }),
-  // );
+  app.useGlobalPipes(new ValidationPipe());
   // app.useStaticAssets(join(__dirname, '..', 'public'));
   // app.setBaseViewsDir(join(__dirname, '..', 'src/views'));
   // app.setViewEngine('ejs');
