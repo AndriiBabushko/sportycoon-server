@@ -16,10 +16,34 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+input DeleteUserInput {
+  id: String!
+}
+
+type DeleteUserResponse {
+  message: String!
+  statusCode: Float!
+}
+
+"""User fitness level"""
+enum FITNESS_LEVEL {
+  ADVANCED
+  BEGINNER
+  INTERMEDIATE
+  NEWBIE
+}
+
 """
 FitnessLevel custom scalar type, allowed values are NEWBIE, BEGINNER, INTERMEDIATE, ADVANCED
 """
 scalar FitnessLevelScalar
+
+"""User gender"""
+enum GENDER {
+  FEMALE
+  MALE
+  OTHER
+}
 
 """Possible goals for training"""
 enum GOAL {
@@ -34,7 +58,7 @@ enum GOAL {
 scalar GenderScalar
 
 type GoalWeight {
-  unit: WeightUnitScalar!
+  unit: WEIGHT_UNIT!
   value: Float!
 }
 
@@ -43,8 +67,14 @@ input GoalWeightInput {
   value: Float!
 }
 
+"""Height unit custom scalar type, allowed values are CM and IN"""
+enum HEIGHT_UNIT {
+  CM
+  IN
+}
+
 type Height {
-  unit: HeightUnitScalar!
+  unit: HEIGHT_UNIT!
   value: Float!
 }
 
@@ -68,9 +98,11 @@ input LoginUserInput {
 }
 
 type Mutation {
+  deleteUserProfile(deleteUserInput: DeleteUserInput!): DeleteUserResponse!
   login(loginUserInput: LoginUserInput!): LoginResponse!
   refreshToken(refreshTokenInput: RefreshTokenInput!): RefreshTokenResponse!
   register(registerUserInput: RegisterUserInput!): RegisterResponse!
+  updateUserProfile(updateUserInput: UpdateUserInput!): UpdateUserResponse!
 }
 
 type Performance {
@@ -124,12 +156,34 @@ input RegisterUserInput {
   weight: WeightInput!
 }
 
+input UpdateUserInput {
+  email: String
+  fitness_level: FitnessLevelScalar
+  full_name: String
+  gender: GenderScalar
+  goal_weight: GoalWeightInput
+  goals: [GOAL!]
+  height: HeightInput
+  id: String!
+  password: String
+  performance: PerformanceInput
+  username: String
+  weight: WeightInput
+}
+
+type UpdateUserResponse {
+  message: String!
+  statusCode: Float!
+  user: User!
+}
+
 type User {
   avatar: Avatar
   created_at: DateTime!
   email: String
-  fitness_level: FitnessLevelScalar
-  gender: GenderScalar
+  fitness_level: FITNESS_LEVEL
+  full_name: String
+  gender: GENDER
   goal_weight: GoalWeight
   goals: [GOAL]
   google_id: String
@@ -143,8 +197,14 @@ type User {
   weight: Weight
 }
 
+"""Weight unit custom scalar type, allowed values are KG and LBS"""
+enum WEIGHT_UNIT {
+  KG
+  LBS
+}
+
 type Weight {
-  unit: WeightUnitScalar!
+  unit: WEIGHT_UNIT!
   value: Float!
 }
 

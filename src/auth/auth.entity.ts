@@ -1,17 +1,17 @@
 import { Directive, Field, Float, ObjectType } from '@nestjs/graphql';
 import {
+  FITNESS_LEVEL,
   FitnessLevelType,
+  GENDER,
   GenderType,
   GOAL,
   GoalType,
+  HEIGHT_UNIT,
   HeightUnitType,
   RoleType,
+  WEIGHT_UNIT,
   WeightUnitType,
 } from '@auth/auth.types';
-import { GenderScalar } from '@scalars/gender.scalar';
-import { HeightUnitScalar } from '@scalars/height-unit.scalar';
-import { WeightUnitScalar } from '@scalars/weight-unit.scalar';
-import { FitnessLevelScalar } from '@scalars/fitness-level.scalar';
 
 @ObjectType()
 @Directive('@key(fields: "id")')
@@ -38,22 +38,22 @@ export class Avatar {
 @ObjectType()
 @Directive('@key(fields: "id")')
 export class Performance {
-  @Field()
+  @Field(() => String)
   id: string;
 
-  @Field()
+  @Field(() => Number)
   max_pull_ups: number;
 
-  @Field()
+  @Field(() => Number)
   max_push_ups: number;
 
-  @Field()
+  @Field(() => Number)
   max_squats: number;
 
-  @Field()
+  @Field(() => Number)
   max_dips: number;
 
-  @Field()
+  @Field(() => String)
   user_id: string;
 }
 
@@ -62,7 +62,7 @@ export class Height {
   @Field(() => Float)
   value: number;
 
-  @Field(() => HeightUnitScalar)
+  @Field(() => HEIGHT_UNIT)
   unit: HeightUnitType;
 }
 
@@ -71,7 +71,7 @@ export class Weight {
   @Field(() => Float)
   value: number;
 
-  @Field(() => WeightUnitScalar)
+  @Field(() => WEIGHT_UNIT)
   unit: WeightUnitType;
 }
 
@@ -80,7 +80,7 @@ export class GoalWeight {
   @Field(() => Float)
   value: number;
 
-  @Field(() => WeightUnitScalar)
+  @Field(() => WEIGHT_UNIT)
   unit: WeightUnitType;
 }
 
@@ -96,7 +96,10 @@ export class User {
   @Field(() => String, { nullable: true })
   email?: string | null;
 
-  @Field(() => GenderScalar, { nullable: true })
+  @Field(() => String, { nullable: true })
+  full_name?: string | null;
+
+  @Field(() => GENDER, { nullable: true })
   gender?: GenderType | null;
 
   @Field(() => Height, { nullable: true })
@@ -108,7 +111,7 @@ export class User {
   @Field(() => GoalWeight, { nullable: true })
   goal_weight?: GoalWeight | null;
 
-  @Field(() => FitnessLevelScalar, { nullable: true })
+  @Field(() => FITNESS_LEVEL, { nullable: true })
   fitness_level?: FitnessLevelType | null;
 
   @Field(() => [GOAL], { nullable: 'itemsAndList' })
