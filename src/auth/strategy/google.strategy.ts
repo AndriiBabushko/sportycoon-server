@@ -40,11 +40,17 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
         },
       });
 
+      const userWithGoogleUsername = await this.prismaService.user.findUnique({
+        where: {
+          username,
+        },
+      });
+
       try {
         user = await this.prismaService.user.create({
           data: {
             email: !userWithGoogleEmail ? email : null,
-            username,
+            username: !userWithGoogleUsername ? username : null,
             google_id: profile.id,
           },
         });

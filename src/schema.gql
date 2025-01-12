@@ -115,10 +115,10 @@ type Performance {
 }
 
 input PerformanceInput {
-  max_dips: Float!
-  max_pull_ups: Float!
-  max_push_ups: Float!
-  max_squats: Float!
+  max_dips: Int!
+  max_pull_ups: Int!
+  max_push_ups: Int!
+  max_squats: Int!
 }
 
 type Query {
@@ -156,6 +156,13 @@ input RegisterUserInput {
   weight: WeightInput!
 }
 
+input UpdatePerformanceInput {
+  max_dips: Int
+  max_pull_ups: Int
+  max_push_ups: Int
+  max_squats: Int
+}
+
 input UpdateUserInput {
   email: String
   fitness_level: FitnessLevelScalar
@@ -165,8 +172,7 @@ input UpdateUserInput {
   goals: [GOAL!]
   height: HeightInput
   id: String!
-  password: String
-  performance: PerformanceInput
+  performance: UpdatePerformanceInput
   username: String
   weight: WeightInput
 }

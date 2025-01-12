@@ -1,4 +1,4 @@
-import { Field, Float, InputType } from '@nestjs/graphql';
+import { Field, Float, InputType, Int } from '@nestjs/graphql';
 import {
   ArrayUnique,
   IsEmail,
@@ -56,25 +56,25 @@ export class GoalWeightInput {
 
 @InputType()
 export class PerformanceInput {
-  @Field()
+  @Field(() => Int)
   @IsInt()
   @Min(0, { message: 'Max pull-ups cannot be negative' })
   @IsNotEmpty({ message: 'Max pull-ups is required' })
   max_pull_ups: number;
 
-  @Field()
+  @Field(() => Int)
   @IsInt()
   @Min(0, { message: 'Max push-ups cannot be negative' })
   @IsNotEmpty({ message: 'Max push-ups is required' })
   max_push_ups: number;
 
-  @Field()
+  @Field(() => Int)
   @IsInt()
   @Min(0, { message: 'Max squats cannot be negative' })
   @IsNotEmpty({ message: 'Max squats is required' })
   max_squats: number;
 
-  @Field()
+  @Field(() => Int)
   @IsInt()
   @Min(0, { message: 'Max dips cannot be negative' })
   @IsNotEmpty({ message: 'Max dips is required' })
