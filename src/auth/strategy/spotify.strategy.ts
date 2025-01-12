@@ -26,6 +26,7 @@ export class SpotifyStrategy extends PassportStrategy(Strategy, 'spotify') {
     done: VerifyCallback,
   ) {
     const email = profile.emails[0].value;
+    console.log(profile);
 
     let user = await this.prismaService.user.findUnique({
       where: {
@@ -40,9 +41,17 @@ export class SpotifyStrategy extends PassportStrategy(Strategy, 'spotify') {
         },
       });
 
+      const userWithSpotifyUsername = await this.prismaService.user.findUnique({
+        where: {
+          username: profile.username,
+        },
+      });
+
       try {
         user = await this.prismaService.user.create({
           data: {
+            full_name: profile.displayName,
+            username: !userWithSpotifyUsername ? profile.username : null,
             email: !userWithSpotifyEmail ? email : null,
             spotify_id: profile.id,
           },

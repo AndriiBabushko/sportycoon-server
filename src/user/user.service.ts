@@ -1,7 +1,8 @@
 import { ConflictException, HttpStatus, Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from '@prisma/prisma.service';
-import { RegisterUserInput } from '@auth/input/register-user.input';
+import { UpdateUserInput } from '@user/input/update-user.input';
+import { DeleteUserInput } from '@user/input/delete-user.input';
 
 @Injectable()
 export class UserService {
@@ -15,43 +16,81 @@ export class UserService {
     return await bcrypt.hash(password, 10);
   }
 
-  async register(registerUserInput: RegisterUserInput) {
-    const { email, username, password } = registerUserInput;
+  async updateUser(updateUserInput: UpdateUserInput) {
+    const { id, ...data } = updateUserInput;
 
-    const isEmailExist = await this.prisma.user.findUnique({
-      where: {
-        email,
-      },
+    const userWithID = await this.prisma.user.findUnique({
+      where: { id },
     });
 
-    if (isEmailExist) {
-      throw new ConflictException('User already exist with this email!');
+    if (!userWithID) {
+      throw new ConflictException('User not found');
     }
 
-    const isUsernameExist = await this.prisma.user.findFirst({
-      where: {
-        username,
-      },
+    const userWithEmail = await this.prisma.user.findUnique({
+      where: { email: data.email },
     });
 
-    if (isUsernameExist) {
-      throw new ConflictException('User already exist with this username!');
+    if (userWithEmail && userWithEmail.id !== id) {
+      throw new ConflictException('Email already in use');
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const newUser = await this.prisma.user.create({
+    const updatedUser = await this.prisma.user.update({
+      where: { id },
       data: {
-        email,
-        password: hashedPassword,
-        username,
+        ...data,
+        height: data.height
+          ? { update: { value: data.height.value, unit: data.height.unit } }
+          : undefined,
+        performance: data.performance
+          ? {
+              update: {
+                max_pull_ups: data.performance.max_pull_ups,
+                max_push_ups: data.performance.max_push_ups,
+                max_squats: data.performance.max_squats,
+                max_dips: data.performance.max_dips,
+              },
+            }
+          : undefined,
+        weight: data.weight
+          ? { update: { value: data.weight.value, unit: data.weight.unit } }
+          : undefined,
+        goal_weight: data.goal_weight
+          ? {
+              update: {
+                value: data.goal_weight.value,
+                unit: data.goal_weight.unit,
+              },
+            }
+          : undefined,
       },
     });
 
     return {
-      code: HttpStatus.CREATED,
-      user: newUser,
-      message: 'User created successfully!',
+      message: 'User profile updated successfully',
+      statusCode: HttpStatus.OK,
+      user: updatedUser,
+    };
+  }
+
+  async deleteUser(deleteUserInput: DeleteUserInput) {
+    const { id } = deleteUserInput;
+
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+    });
+
+    if (!user) {
+      throw new ConflictException('User not found');
+    }
+
+    await this.prisma.user.delete({
+      where: { id },
+    });
+
+    return {
+      message: 'User profile deleted successfully',
+      statusCode: HttpStatus.OK,
     };
   }
 }

@@ -11,51 +11,39 @@ type Avatar {
   user_id: String!
 }
 
-input CreateModifierInput {
-  name: String!
-}
-
-input CreateModifierOptionInput {
-  modifier_id: String!
-  value: String!
-}
-
-input CreateShopCartInput {
-  user_id: String!
-}
-
-input CreateShopCartItemInput {
-  quantity: Int!
-  shop_cart_id: String!
-  shop_item_id: String!
-}
-
-input CreateShopCategoryInput {
-  description: String!
-  name: String!
-  parent_id: String
-}
-
-input CreateShopItemInput {
-  bundle_discount: Float
-  category_id: String!
-  description: String!
-  images: [String!]!
-  name: String!
-  preview: String!
-  price: Float!
-  user_id: String
-}
-
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
 
+input DeleteUserInput {
+  id: String!
+}
+
+type DeleteUserResponse {
+  message: String!
+  statusCode: Float!
+}
+
+"""User fitness level"""
+enum FITNESS_LEVEL {
+  ADVANCED
+  BEGINNER
+  INTERMEDIATE
+  NEWBIE
+}
+
 """
 FitnessLevel custom scalar type, allowed values are NEWBIE, BEGINNER, INTERMEDIATE, ADVANCED
 """
 scalar FitnessLevelScalar
+
+"""User gender"""
+enum GENDER {
+  FEMALE
+  MALE
+  OTHER
+}
 
 """Possible goals for training"""
 enum GOAL {
@@ -70,7 +58,7 @@ enum GOAL {
 scalar GenderScalar
 
 type GoalWeight {
-  unit: WeightUnitScalar!
+  unit: WEIGHT_UNIT!
   value: Float!
 }
 
@@ -79,8 +67,14 @@ input GoalWeightInput {
   value: Float!
 }
 
+"""Height unit custom scalar type, allowed values are CM and IN"""
+enum HEIGHT_UNIT {
+  CM
+  IN
+}
+
 type Height {
-  unit: HeightUnitScalar!
+  unit: HEIGHT_UNIT!
   value: Float!
 }
 
@@ -103,46 +97,12 @@ input LoginUserInput {
   password: String!
 }
 
-type Modifier {
-  created_at: DateTime!
-  id: String!
-  name: String!
-  options: [ModifierOption!]!
-  updated_at: DateTime!
-}
-
-type ModifierOption {
-  created_at: DateTime!
-  id: String!
-  modifier: Modifier!
-  modifier_id: String!
-  shop_item_modifiers: [ShopItemModifier!]!
-  updated_at: DateTime!
-  value: String!
-}
-
 type Mutation {
-  createModifier(data: CreateModifierInput!): Modifier!
-  createModifierOption(data: CreateModifierOptionInput!): ModifierOption!
-  createShopCart(data: CreateShopCartInput!): ShopCart!
-  createShopCartItem(data: CreateShopCartItemInput!): ShopCartItem!
-  createShopCategory(data: CreateShopCategoryInput!): ShopCategory!
-  createShopItem(data: CreateShopItemInput!): ShopItem!
-  deleteModifier(id: String!): Modifier!
-  deleteModifierOption(id: String!): ModifierOption!
-  deleteShopCart(id: String!): ShopCart!
-  deleteShopCartItem(id: String!): ShopCartItem!
-  deleteShopCategory(id: String!): ShopCategory!
-  deleteShopItem(id: String!): ShopItem!
+  deleteUserProfile(deleteUserInput: DeleteUserInput!): DeleteUserResponse!
   login(loginUserInput: LoginUserInput!): LoginResponse!
   refreshToken(refreshTokenInput: RefreshTokenInput!): RefreshTokenResponse!
   register(registerUserInput: RegisterUserInput!): RegisterResponse!
-  updateModifier(data: UpdateModifierInput!, id: String!): Modifier!
-  updateModifierOption(data: UpdateModifierOptionInput!, id: String!): ModifierOption!
-  updateShopCart(data: UpdateShopCartInput!, id: String!): ShopCart!
-  updateShopCartItem(data: UpdateShopCartItemInput!, id: String!): ShopCartItem!
-  updateShopCategory(data: UpdateShopCategoryInput!, id: String!): ShopCategory!
-  updateShopItem(data: UpdateShopItemInput!, id: String!): ShopItem!
+  updateUserProfile(updateUserInput: UpdateUserInput!): UpdateUserResponse!
 }
 
 type Performance {
@@ -155,25 +115,13 @@ type Performance {
 }
 
 input PerformanceInput {
-  max_dips: Float!
-  max_pull_ups: Float!
-  max_push_ups: Float!
-  max_squats: Float!
+  max_dips: Int!
+  max_pull_ups: Int!
+  max_push_ups: Int!
+  max_squats: Int!
 }
 
 type Query {
-  getModifierById(id: String!): Modifier!
-  getModifierOptionById(id: String!): ModifierOption!
-  getModifierOptions: [ModifierOption!]!
-  getModifiers: [Modifier!]!
-  getShopCartById(id: String!): ShopCart!
-  getShopCartItemById(id: String!): ShopCartItem!
-  getShopCartItems: [ShopCartItem!]!
-  getShopCarts: [ShopCart!]!
-  getShopCategories: [ShopCategory!]!
-  getShopCategoryById(id: String!): ShopCategory!
-  getShopItemById(id: String!): ShopItem!
-  getShopItems: [ShopItem!]!
   me: User!
   sayHello: String!
 }
@@ -208,108 +156,40 @@ input RegisterUserInput {
   weight: WeightInput!
 }
 
-type ShopCart {
-  created_at: DateTime!
+input UpdatePerformanceInput {
+  max_dips: Int
+  max_pull_ups: Int
+  max_push_ups: Int
+  max_squats: Int
+}
+
+input UpdateUserInput {
+  email: String
+  fitness_level: FitnessLevelScalar
+  full_name: String
+  gender: GenderScalar
+  goal_weight: GoalWeightInput
+  goals: [GOAL!]
+  height: HeightInput
   id: String!
-  items: [ShopCartItem!]!
-  updated_at: DateTime!
+  performance: UpdatePerformanceInput
+  username: String
+  weight: WeightInput
+}
+
+type UpdateUserResponse {
+  message: String!
+  statusCode: Float!
   user: User!
-  user_id: String!
-}
-
-type ShopCartItem {
-  created_at: DateTime!
-  id: String!
-  quantity: Int!
-  shop_cart: ShopCart!
-  shop_cart_id: String!
-  shop_item: ShopItem!
-  shop_item_id: String!
-  updated_at: DateTime!
-}
-
-type ShopCategory {
-  created_at: DateTime!
-  description: String!
-  id: String!
-  items: [ShopItem!]!
-  name: String!
-  parent: ShopCategory
-  parent_id: String
-  subcategories: [ShopCategory!]
-  updated_at: DateTime!
-}
-
-type ShopItem {
-  bundle_discount: Float
-  cart_items: [ShopCartItem!]!
-  category: ShopCategory!
-  category_id: String!
-  created_at: DateTime!
-  description: String!
-  id: String!
-  images: [String!]!
-  modifiers: [ShopItemModifier!]!
-  name: String!
-  preview: String!
-  price: Float!
-  updated_at: DateTime!
-  user: User
-  user_id: String
-}
-
-type ShopItemModifier {
-  created_at: DateTime!
-  id: String!
-  modifier_option: ModifierOption!
-  modifier_option_id: String!
-  shop_item: ShopItem!
-  shop_item_id: String!
-  updated_at: DateTime!
-}
-
-input UpdateModifierInput {
-  name: String
-}
-
-input UpdateModifierOptionInput {
-  modifier_id: String
-  value: String
-}
-
-input UpdateShopCartInput {
-  user_id: String
-}
-
-input UpdateShopCartItemInput {
-  quantity: Int
-  shop_cart_id: String
-  shop_item_id: String
-}
-
-input UpdateShopCategoryInput {
-  description: String
-  name: String
-  parent_id: String
-}
-
-input UpdateShopItemInput {
-  bundle_discount: Float
-  category_id: String
-  description: String
-  images: [String!]
-  name: String
-  preview: String
-  price: Float
-  user_id: String
 }
 
 type User {
   avatar: Avatar
   created_at: DateTime!
   email: String
-  fitness_level: FitnessLevelScalar
-  gender: GenderScalar
+  fitness_level: FITNESS_LEVEL
+  full_name: String
+  gender: GENDER
   goal_weight: GoalWeight
   goals: [GOAL]
   google_id: String
@@ -323,8 +203,14 @@ type User {
   weight: Weight
 }
 
+"""Weight unit custom scalar type, allowed values are KG and LBS"""
+enum WEIGHT_UNIT {
+  KG
+  LBS
+}
+
 type Weight {
-  unit: WeightUnitScalar!
+  unit: WEIGHT_UNIT!
   value: Float!
 }
 
