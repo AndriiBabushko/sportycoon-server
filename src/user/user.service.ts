@@ -35,34 +35,80 @@ export class UserService {
       throw new ConflictException('Email already in use');
     }
 
+    const relatedUpdates: any = {};
+
+    if (data.height) {
+      relatedUpdates.height = {
+        upsert: {
+          create: {
+            value: data.height.value,
+            unit: data.height.unit,
+          },
+          update: { value: data.height.value, unit: data.height.unit },
+        },
+      };
+    }
+
+    if (data.performance) {
+      if (
+        !data.performance.max_pull_ups ||
+        !data.performance.max_push_ups ||
+        !data.performance.max_squats ||
+        !data.performance.max_dips
+      ) {
+        throw new ConflictException('Performance data is incomplete');
+      }
+
+      relatedUpdates.performance = {
+        upsert: {
+          create: {
+            max_pull_ups: data.performance.max_pull_ups,
+            max_push_ups: data.performance.max_push_ups,
+            max_squats: data.performance.max_squats,
+            max_dips: data.performance.max_dips,
+          },
+          update: {
+            max_pull_ups: data.performance.max_pull_ups,
+            max_push_ups: data.performance.max_push_ups,
+            max_squats: data.performance.max_squats,
+            max_dips: data.performance.max_dips,
+          },
+        },
+      };
+    }
+
+    if (data.weight) {
+      relatedUpdates.weight = {
+        upsert: {
+          create: {
+            value: data.weight.value,
+            unit: data.weight.unit,
+          },
+          update: { value: data.weight.value, unit: data.weight.unit },
+        },
+      };
+    }
+
+    if (data.goal_weight) {
+      relatedUpdates.goal_weight = {
+        upsert: {
+          create: {
+            value: data.goal_weight.value,
+            unit: data.goal_weight.unit,
+          },
+          update: {
+            value: data.goal_weight.value,
+            unit: data.goal_weight.unit,
+          },
+        },
+      };
+    }
+
     const updatedUser = await this.prisma.user.update({
       where: { id },
       data: {
         ...data,
-        height: data.height
-          ? { update: { value: data.height.value, unit: data.height.unit } }
-          : undefined,
-        performance: data.performance
-          ? {
-              update: {
-                max_pull_ups: data.performance.max_pull_ups,
-                max_push_ups: data.performance.max_push_ups,
-                max_squats: data.performance.max_squats,
-                max_dips: data.performance.max_dips,
-              },
-            }
-          : undefined,
-        weight: data.weight
-          ? { update: { value: data.weight.value, unit: data.weight.unit } }
-          : undefined,
-        goal_weight: data.goal_weight
-          ? {
-              update: {
-                value: data.goal_weight.value,
-                unit: data.goal_weight.unit,
-              },
-            }
-          : undefined,
+        ...relatedUpdates,
       },
     });
 
