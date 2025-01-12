@@ -19,16 +19,20 @@ export class UserService {
   async updateUser(updateUserInput: UpdateUserInput) {
     const { id, ...data } = updateUserInput;
 
-    const user = await this.prisma.user.findUnique({
+    const userWithID = await this.prisma.user.findUnique({
       where: { id },
     });
 
-    if (!user) {
+    if (!userWithID) {
       throw new ConflictException('User not found');
     }
 
-    if (data.password) {
-      data.password = await this.hashPassword(data.password);
+    const userWithEmail = await this.prisma.user.findUnique({
+      where: { email: data.email },
+    });
+
+    if (userWithEmail && userWithEmail.id !== id) {
+      throw new ConflictException('Email already in use');
     }
 
     const updatedUser = await this.prisma.user.update({

@@ -1,20 +1,43 @@
-import { Field, InputType } from '@nestjs/graphql';
+import { Field, InputType, Int } from '@nestjs/graphql';
 import {
   ArrayUnique,
   IsEnum,
+  IsInt,
   IsNotEmpty,
   IsString,
-  MinLength,
+  Min,
 } from '@nestjs/class-validator';
 import { FITNESS_LEVEL, GENDER, GOAL } from '@auth/auth.types';
 import { GenderScalar } from '@scalars/gender.scalar';
 import {
   GoalWeightInput,
   HeightInput,
-  PerformanceInput,
   WeightInput,
 } from '@auth/input/register-user.input';
 import { FitnessLevelScalar } from '@scalars/fitness-level.scalar';
+
+@InputType()
+export class UpdatePerformanceInput {
+  @Field(() => Int, { nullable: true })
+  @IsInt()
+  @Min(0, { message: 'Max pull-ups cannot be negative' })
+  max_pull_ups?: number;
+
+  @Field(() => Int, { nullable: true })
+  @IsInt()
+  @Min(0, { message: 'Max push-ups cannot be negative' })
+  max_push_ups?: number;
+
+  @Field(() => Int, { nullable: true })
+  @IsInt()
+  @Min(0, { message: 'Max squats cannot be negative' })
+  max_squats?: number;
+
+  @Field(() => Int, { nullable: true })
+  @IsInt()
+  @Min(0, { message: 'Max dips cannot be negative' })
+  max_dips?: number;
+}
 
 @InputType()
 export class UpdateUserInput {
@@ -34,11 +57,6 @@ export class UpdateUserInput {
   @Field(() => String, { nullable: true })
   @IsString({ message: 'Full name must be a string' })
   full_name?: string;
-
-  @Field(() => String, { nullable: true })
-  @IsString({ message: 'Password must be a string' })
-  @MinLength(8, { message: 'Password must be at least 8 characters' })
-  password?: string;
 
   @Field(() => GenderScalar, { nullable: true })
   gender?: GENDER;
@@ -60,6 +78,6 @@ export class UpdateUserInput {
   @IsEnum(GOAL, { each: true, message: 'Invalid goal type' })
   goals: GOAL[];
 
-  @Field(() => PerformanceInput, { nullable: true })
-  performance: PerformanceInput;
+  @Field(() => UpdatePerformanceInput, { nullable: true })
+  performance: UpdatePerformanceInput;
 }

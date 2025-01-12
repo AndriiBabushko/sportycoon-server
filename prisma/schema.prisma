@@ -49,7 +49,7 @@ model Avatar {
   id         String   @id @default(uuid()) @db.Uuid
   public_id  String
   url        String
-  user       User     @relation(fields: [user_id], references: [id])
+  user       User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
   user_id    String   @unique @db.Uuid
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
@@ -61,7 +61,7 @@ model Performance {
   max_push_ups Int
   max_squats   Int
   max_dips     Int
-  user         User   @relation(fields: [user_id], references: [id])
+  user         User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
   user_id      String @unique @db.Uuid
 }
 
@@ -69,7 +69,7 @@ model Height {
   id      String     @id @default(uuid()) @db.Uuid
   value   Float
   unit    HeightUnit
-  user    User       @relation(fields: [user_id], references: [id])
+  user    User       @relation(fields: [user_id], references: [id], onDelete: Cascade)
   user_id String     @unique @db.Uuid
 }
 
@@ -77,7 +77,7 @@ model Weight {
   id      String     @id @default(uuid()) @db.Uuid
   value   Float
   unit    WeightUnit
-  user    User       @relation(fields: [user_id], references: [id])
+  user    User       @relation(fields: [user_id], references: [id], onDelete: Cascade)
   user_id String     @unique @db.Uuid
 }
 
@@ -85,7 +85,7 @@ model GoalWeight {
   id      String     @id @default(uuid()) @db.Uuid
   value   Float
   unit    WeightUnit
-  user    User       @relation(fields: [user_id], references: [id])
+  user    User       @relation(fields: [user_id], references: [id], onDelete: Cascade)
   user_id String     @unique @db.Uuid
 }
 
@@ -117,7 +117,7 @@ model ShopCart {
   created_at DateTime       @default(now())
   updated_at DateTime       @updatedAt
   items      ShopCartItem[]
-  user       User           @relation(fields: [user_id], references: [id])
+  user       User           @relation(fields: [user_id], references: [id], onDelete: Cascade)
   user_id    String         @unique @db.Uuid
 }
 
@@ -129,7 +129,7 @@ model ShopCategory {
   created_at    DateTime       @default(now())
   updated_at    DateTime       @updatedAt
   subcategories ShopCategory[] @relation("CategoryParent")
-  parent        ShopCategory?  @relation("CategoryParent", fields: [parent_id], references: [id])
+  parent        ShopCategory?  @relation("CategoryParent", fields: [parent_id], references: [id], onDelete: Cascade)
   parent_id     String?        @db.Uuid
 }
 
@@ -145,9 +145,9 @@ model ShopItem {
   updated_at      DateTime           @updatedAt
   cart_items      ShopCartItem[]
   modifiers       ShopItemModifier[]
-  user            User?              @relation(fields: [user_id], references: [id])
+  user            User?              @relation(fields: [user_id], references: [id], onDelete: Cascade)
   user_id         String?            @db.Uuid
-  category        ShopCategory       @relation(fields: [category_id], references: [id])
+  category        ShopCategory       @relation(fields: [category_id], references: [id], onDelete: Cascade)
   category_id     String             @db.Uuid
 }
 
@@ -156,9 +156,9 @@ model ShopCartItem {
   quantity     Int
   created_at   DateTime @default(now())
   updated_at   DateTime @updatedAt
-  shop_cart    ShopCart @relation(fields: [shop_cart_id], references: [id])
+  shop_cart    ShopCart @relation(fields: [shop_cart_id], references: [id], onDelete: Cascade)
   shop_cart_id String   @db.Uuid
-  shop_item    ShopItem @relation(fields: [shop_item_id], references: [id])
+  shop_item    ShopItem @relation(fields: [shop_item_id], references: [id], onDelete: Cascade)
   shop_item_id String   @db.Uuid
 }
 
@@ -176,7 +176,7 @@ model ModifierOption {
   created_at          DateTime           @default(now())
   updated_at          DateTime           @updatedAt
   shop_item_modifiers ShopItemModifier[]
-  modifier            Modifier           @relation(fields: [modifier_id], references: [id])
+  modifier            Modifier           @relation(fields: [modifier_id], references: [id], onDelete: Cascade)
   modifier_id         String             @db.Uuid
 }
 
@@ -184,8 +184,8 @@ model ShopItemModifier {
   id                 String         @id @default(uuid()) @db.Uuid
   created_at         DateTime       @default(now())
   updated_at         DateTime       @updatedAt
-  shop_item          ShopItem       @relation(fields: [shop_item_id], references: [id])
+  shop_item          ShopItem       @relation(fields: [shop_item_id], references: [id], onDelete: Cascade)
   shop_item_id       String         @db.Uuid
-  modifier_option    ModifierOption @relation(fields: [modifier_option_id], references: [id])
+  modifier_option    ModifierOption @relation(fields: [modifier_option_id], references: [id], onDelete: Cascade)
   modifier_option_id String         @db.Uuid
 }
