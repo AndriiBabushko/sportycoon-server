@@ -21,6 +21,18 @@ export class AuthService {
     private readonly userService: UserService,
   ) {}
 
+  async getUserById(user: User) {
+    return this.prismaService.user.findUnique({
+      where: { id: user.id },
+      include: {
+        height: true,
+        weight: true,
+        performance: true,
+        goal_weight: true,
+      },
+    });
+  }
+
   async login(loginUserInput: LoginUserInput) {
     const { email, password } = loginUserInput;
 
