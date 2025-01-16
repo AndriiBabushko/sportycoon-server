@@ -19,103 +19,171 @@ export class UserService {
   async updateUser(updateUserInput: UpdateUserInput) {
     const { id, ...data } = updateUserInput;
 
-    const userWithID = await this.prisma.user.findUnique({
-      where: { id },
-    });
-
-    if (!userWithID) {
+    // 1. Переконатися, що користувач із таким ID існує
+    const existingUser = await this.prisma.user.findUnique({ where: { id } });
+    if (!existingUser) {
       throw new ConflictException('User not found');
     }
 
-    const userWithEmail = await this.prisma.user.findUnique({
-      where: { email: data.email },
-    });
-
-    if (userWithEmail && userWithEmail.id !== id) {
-      throw new ConflictException('Email already in use');
+    // 2. Якщо оновлюється email, переконатися, що він не зайнятий іншим
+    if (data.email) {
+      const userWithSameEmail = await this.prisma.user.findUnique({
+        where: { email: data.email },
+      });
+      if (userWithSameEmail && userWithSameEmail.id !== id) {
+        throw new ConflictException('Email already in use');
+      }
     }
 
-    const relatedUpdates: any = {};
+    // 3. Збираємо прості поля для оновлення user
+    const updateDataForUser: any = {};
+    if (data.username) updateDataForUser.username = data.username;
+    if (data.email) updateDataForUser.email = data.email;
+    if (data.full_name) updateDataForUser.full_name = data.full_name;
+    if (data.gender) updateDataForUser.gender = data.gender;
+    // Якщо у вас є інші поля (наприклад, goals), додайте їх сюди
 
+    // 4. Оновлюємо user простими полями
+    await this.prisma.user.update({
+      where: { id },
+      data: updateDataForUser,
+    });
+
+    // 5. Якщо прийшли дані по height, робимо окремий upsert у таблиці "height"
+    //    Припускаємо, що у таблиці height є поле userId, яке з’єднане з user(id)
     if (data.height) {
-      relatedUpdates.height = {
-        upsert: {
-          create: {
+      // Чи є взагалі запис у таблиці height для цього user’а?
+      const existingHeight = await this.prisma.height.findUnique({
+        where: { user_id: id },
+      });
+      if (existingHeight) {
+        // update
+        await this.prisma.height.update({
+          where: { user_id: id },
+          data: {
             value: data.height.value,
             unit: data.height.unit,
           },
-          update: { value: data.height.value, unit: data.height.unit },
-        },
-      };
+        });
+      } else {
+        // create
+        await this.prisma.height.create({
+          data: {
+            user_id: id,
+            value: data.height.value,
+            unit: data.height.unit,
+          },
+        });
+      }
     }
 
+    // 6. Аналогічно для weight
+    if (data.weight) {
+      const existingWeight = await this.prisma.weight.findUnique({
+        where: { user_id: id },
+      });
+      if (existingWeight) {
+        await this.prisma.weight.update({
+          where: { user_id: id },
+          data: {
+            value: data.weight.value,
+            unit: data.weight.unit,
+          },
+        });
+      } else {
+        await this.prisma.weight.create({
+          data: {
+            user_id: id,
+            value: data.weight.value,
+            unit: data.weight.unit,
+          },
+        });
+      }
+    }
+
+    // 7. Аналогічно для goal_weight
+    if (data.goal_weight) {
+      const existingGoalWeight = await this.prisma.goalWeight.findUnique({
+        where: { user_id: id },
+      });
+      if (existingGoalWeight) {
+        await this.prisma.goalWeight.update({
+          where: { user_id: id },
+          data: {
+            value: data.goal_weight.value,
+            unit: data.goal_weight.unit,
+          },
+        });
+      } else {
+        await this.prisma.goalWeight.create({
+          data: {
+            user_id: id,
+            value: data.goal_weight.value,
+            unit: data.goal_weight.unit,
+          },
+        });
+      }
+    }
+
+    // 8. Якщо є performance-дані
     if (data.performance) {
+      const { max_pull_ups, max_push_ups, max_squats, max_dips } =
+        data.performance;
+
+      // Якщо треба, щоб усі поля були обов’язково
       if (
-        !data.performance.max_pull_ups ||
-        !data.performance.max_push_ups ||
-        !data.performance.max_squats ||
-        !data.performance.max_dips
+        max_pull_ups == null ||
+        max_push_ups == null ||
+        max_squats == null ||
+        max_dips == null
       ) {
         throw new ConflictException('Performance data is incomplete');
       }
 
-      relatedUpdates.performance = {
-        upsert: {
-          create: {
-            max_pull_ups: data.performance.max_pull_ups,
-            max_push_ups: data.performance.max_push_ups,
-            max_squats: data.performance.max_squats,
-            max_dips: data.performance.max_dips,
+      // Чи є запис performance для user’а?
+      const existingPerformance = await this.prisma.performance.findUnique({
+        where: { user_id: id },
+      });
+      if (existingPerformance) {
+        await this.prisma.performance.update({
+          where: { user_id: id },
+          data: {
+            max_pull_ups,
+            max_push_ups,
+            max_squats,
+            max_dips,
           },
-          update: {
-            max_pull_ups: data.performance.max_pull_ups,
-            max_push_ups: data.performance.max_push_ups,
-            max_squats: data.performance.max_squats,
-            max_dips: data.performance.max_dips,
+        });
+      } else {
+        await this.prisma.performance.create({
+          data: {
+            user_id: id,
+            max_pull_ups,
+            max_push_ups,
+            max_squats,
+            max_dips,
           },
-        },
-      };
+        });
+      }
     }
 
-    if (data.weight) {
-      relatedUpdates.weight = {
-        upsert: {
-          create: {
-            value: data.weight.value,
-            unit: data.weight.unit,
-          },
-          update: { value: data.weight.value, unit: data.weight.unit },
-        },
-      };
-    }
-
-    if (data.goal_weight) {
-      relatedUpdates.goal_weight = {
-        upsert: {
-          create: {
-            value: data.goal_weight.value,
-            unit: data.goal_weight.unit,
-          },
-          update: {
-            value: data.goal_weight.value,
-            unit: data.goal_weight.unit,
-          },
-        },
-      };
-    }
-
-    const updatedUser = await this.prisma.user.update({
+    // 9. Тепер, щоб повернути оновлені стосунки (height, weight, goal_weight, performance),
+    //    ми можемо зробити ще один запит з include
+    const finalUser = await this.prisma.user.findUnique({
       where: { id },
-      data: {
-        ...data,
-        ...relatedUpdates,
+      include: {
+        height: true,
+        weight: true,
+        goal_weight: true,
+        performance: true,
       },
     });
 
+    // 10. Повертаємо акуратну відповідь
     return {
       message: 'User profile updated successfully',
       statusCode: HttpStatus.OK,
-      user: updatedUser,
+      user: finalUser,
     };
   }
 

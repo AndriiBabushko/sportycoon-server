@@ -37,7 +37,7 @@ export class AuthResolver {
   @UseGuards(GqlAuthGuard)
   @Query(() => User, { name: 'me' })
   async getCurrentAuthUser(@AuthUserDecorator() user: User) {
-    return user;
+    return await this.authService.getUserById(user);
   }
 
   @Mutation(() => RefreshTokenResponse, { name: 'refreshToken' })
